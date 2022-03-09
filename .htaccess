@@ -1,0 +1,68 @@
+# 1 Month for all your static assets
+ <filesMatch ".(ico|pdf|flv|jpg|jpeg|png|gif|js|css|swf)$">
+ Header set Cache-Control "max-age=2592000, public"
+ </filesMatch>
+ 
+  
+ # no cache for real articles files
+ <filesMatch ".(html|htm)$">
+ Header set Cache-Control "max-age=0, no-cache, no-store, must-revalidate"
+ </filesMatch>
+ 
+
+RewriteEngine On
+
+#RewriteCond %{HTTP_HOST} !^btiquets\.com$ [NC]
+#RewriteRule ^(.*)$ http://btiquets.com/$1 [R=301,L]
+
+
+RewriteRule ^inici$ front/home.php [L]
+RewriteRule ^portada/(.*)$ front/index.php?compte=$1 [L]
+RewriteRule ^portada(.*)$ front/index.php [L]
+RewriteRule ^login$ gest/pages/index.php [L]
+RewriteRule ^admin/edit-activity/(.*)$ gest/pages/index.php?submenu=10&id=$1 [L]
+RewriteRule ^admin/edit-user/(.*)$ gest/pages/index.php?submenu=11&id=$1 [L]
+RewriteRule ^admin/edit-reservation/(.*)$ gest/pages/index.php?submenu=12&id=$1 [L]
+RewriteRule ^admin/edit-compte/(.*)$ gest/pages/index.php?submenu=13&id=$1 [L]
+RewriteRule ^admin/edit-activitat/(.*)$ gest/pages/index.php?submenu=19&id=$1 [L]
+RewriteRule ^admin/edit-preu/(.*)$ gest/pages/index.php?submenu=21&id=$1 [L]
+RewriteRule ^admin/edit-guia/(.*)$ gest/pages/index.php?submenu=23&id=$1 [L]
+RewriteRule ^admin/edit-espai/(.*)$ gest/pages/index.php?submenu=25&id=$1 [L]
+RewriteRule ^admin/edit-admin/(.*)$ gest/pages/index.php?submenu=27&id=$1 [L]
+RewriteRule ^admin/edit-client/(.*)$ gest/pages/index.php?submenu=29&id=$1 [L]
+RewriteRule ^admin/edit-hotel/(.*)$ gest/pages/index.php?submenu=15&id=$1 [L]
+RewriteRule ^admin/edit-producte/(.*)$ gest/pages/index.php?submenu=16&id=$1 [L]
+RewriteRule ^admin/edit-enviament/(.*)$ gest/pages/index.php?submenu=17&id=$1 [L]
+RewriteRule ^admin/configuracio$ gest/pages/index.php?submenu=14 [L]
+RewriteRule ^admin/(.*)$ gest/pages/index.php?submenu=$1 [L]
+RewriteRule ^admin$ gest/pages/index.php?submenu=$1 [L]
+RewriteRule ^tpv-notification-paypal$ php/paypal_return.php [L]
+RewriteRule ^tpv-notification/(.*)$ php/tpv_return.php?event=$1 [L]
+RewriteRule ^admin-reserva/confirma/(.*)$ index.php?page=5&command=accept&code=$1 [L]
+RewriteRule ^admin-reserva/denega/(.*)$ index.php?page=5&command=deny&code=$1 [L]
+RewriteRule ^condicions$ index.php?page=1 [L]
+RewriteRule ^lopd/(.*)$ index.php?page=2&compte=$1 [L]
+RewriteRule ^validar/(.*)$ index.php?reserva=$1&page=7 [L]
+RewriteRule ^check/(.*)$ index.php?reserva=$1&page=6 [L]
+RewriteRule ^process-ok/(.*)/(.*)$ index.php?event=$1&reserva=$2&page=3 [L]
+RewriteRule ^process-fail/(.*)$ index.php?event=$1&page=4 [L]
+RewriteRule ^event/es/(.*)$ index.php?event=$1&state=0&lang=es [L]
+RewriteRule ^event/en/(.*)$ index.php?event=$1&state=0&lang=en [L]
+RewriteRule ^event/(.*)$ index.php?event=$1&state=0 [L]
+RewriteRule ^dabtest$ php/dabtest.php [L]
+RewriteRule ^tiquet/(.*)$ php/itiquet.php?codi=$1 [L]
+RewriteRule ^$ front/home.php [L]
+
+
+ErrorDocument 404 /404.php 
+
+<ifModule mod_gzip.c>
+mod_gzip_on Yes
+mod_gzip_dechunk Yes
+mod_gzip_item_include file .(html?|txt|css|js|php|pl)$
+mod_gzip_item_include handler ^cgi-script$
+mod_gzip_item_include mime ^text/.*
+mod_gzip_item_include mime ^application/x-javascript.*
+mod_gzip_item_exclude mime ^image/.*
+mod_gzip_item_exclude rspheader ^Content-Encoding:.*gzip.*
+</ifModule>

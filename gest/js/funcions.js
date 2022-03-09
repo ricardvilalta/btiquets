@@ -1,0 +1,37 @@
+function TableSelectionEvent()
+{
+    $('tr').not(".head_row").off('click');
+    $('tr').not(".head_row").on('click',function(event){
+        if (event.shiftKey) 
+        {
+            if($(this).hasClass('selected'))
+            {
+                $(this).removeClass('success');
+            }
+            else
+            {
+                $(this).addClass('success');
+            }
+        }
+        else
+        {                
+            if($(this).hasClass('success'))
+            {
+                bsel=true;
+            }
+            else
+            {
+                bsel=false;
+            }
+            $('tr').removeClass('success');
+            if(bsel)
+            {
+                $(this).removeClass('success');
+            }
+            else
+            {
+                $(this).addClass('success');
+            }
+        }
+    });
+}

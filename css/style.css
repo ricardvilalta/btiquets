@@ -1,0 +1,427 @@
+/**************************************************************************************************************************************************************************/
+/* General */
+/**************************************************************************************************************************************************************************/
+input.missing, select.missing {
+    background-color: #FF5C72;
+    color: #ffffff;
+}
+
+textarea.missing {
+    background-color: #FF5C72;
+    color: #ffffff;
+}
+
+.noselect {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    cursor: pointer;
+}
+.dropdown-menu > li {
+    cursor: pointer;
+}
+
+.legal_text {
+    line-height: 1.3;
+    padding: 1em 12em;
+    font-size: .9em;
+}
+
+.no-padding {
+    margin-left: -15px;
+}
+
+label.formulari {
+    text-align: left;
+    margin-bottom: 0;
+    line-height: 1.2;
+}
+
+.sel-nav {
+    margin: 15px;
+}
+/**************************************************************************************************************************************************************************/
+
+
+/**************************************************************************************************************************************************************************/
+/* Calendari */
+/**************************************************************************************************************************************************************************/
+.stdcal {
+    margin: auto;    
+    display: inline-block;    
+}
+
+.ui-datepicker-inline {
+    margin: auto;
+}
+
+.hidingcal {
+    position: absolute;
+    z-index: 1;
+    display: none;
+}
+
+#eventcalendar .ui-state-active {
+	border: 1px solid #aaa;
+	border-left: 6px solid #aaa;
+	border-right: 6px solid #aaa;
+    font-weight: bold;
+    text-align: center;
+}
+}
+
+.available_date > a.ui-state-default {
+    background: #8cd1a8;
+}
+/* begin: jQuery UI Datepicker moving pixels fix */
+	table.ui-datepicker-calendar {border-collapse: separate;}
+	.ui-datepicker-calendar td {border: 1px solid transparent;}
+/* end: jQuery UI Datepicker moving pixels fix */
+
+/* begin: jQuery UI Datepicker emphasis on selected dates */
+.ui-datepicker .ui-datepicker-calendar .ui-state-highlight a {
+	background: #743620 none; /* a color that fits the widget theme */
+	color: white; /* a color that is readeable with the color above */
+}
+/* end: jQuery UI Datepicker emphasis on selected dates */
+
+.cal_info, .cal_info2 {
+    display: none;
+}
+
+.caltype_1, .caltype_2 {
+    display: none;
+}
+/**************************************************************************************************************************************************************************/
+
+
+
+/**************************************************************************************************************************************************************************/
+/* images upload & progress-bar*/
+/**************************************************************************************************************************************************************************/
+.img_upload_btn {
+    background-color: rgb(120,120,120);
+    -moz-border-radius:6px;
+    -webkit-border-radius:6px;
+    border-radius:6px;
+    color:rgb(255,255,255);
+    cursor:pointer;
+    margin: 5px 0;
+    padding: 10px 15px;
+    font-size:14px;
+    display:inline-block;
+}
+
+.image_frame_list {
+    list-style:none;
+    padding:0;
+}
+
+.img_frame {
+    display:inline-block;
+    margin:4px;
+    position:relative;
+    width: 100px;
+    height: 100px;
+    vertical-align: top;
+    overflow:hidden;
+}
+
+.img_frame img {
+    position:relative;    
+    -webkit-border-radius: 6px;
+	-moz-border-radius: 6px;
+	border-radius: 6px;
+}
+
+.img_frame .img_options {
+    left: 0;
+    position: absolute;
+    text-align: center;
+    top: 5px;
+    width: 100%;
+    color:rgb(130,130,130);
+    text-decoration: inherit;
+    cursor:pointer;
+    z-index:1;
+    display:none;
+}
+
+.img_frame .img_options a {
+    font-size: 12px;
+}
+
+.header_image {
+    border:2px solid rgba(40,40,40,.5);
+}
+
+.special_image {
+    border:2px solid #F7FF54;
+}
+
+.special_image_2 {
+    border:2px solid #0BFF54;
+}
+
+.qr_image {
+    border:2px solid #2611CD;
+}
+
+.progress {
+    background-color: #F5F5F5;
+    border-radius: 4px;
+    -webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1) inset;
+    width:200px;
+    height: 20px;
+    overflow: hidden;
+    display:none;
+    vertical-align:middle;
+}
+
+.progress-bar {
+    background-color: #428BCA;
+    box-shadow: 0 -1px 0 rgba(0, 0, 0, 0.15) inset;
+    color: #FFFFFF;
+    float: left;
+    font-size: 12px;
+    height: 100%;
+    text-align: center;
+    transition: width 0.6s ease 0s;
+    width: 0;
+}
+
+.progress-bar-success {
+    background-color: #5CB85C;
+}
+/**************************************************************************************************************************************************************************/
+
+/**************************************************************************************************************************************************************************/
+/* suite allotjaments*/
+/**************************************************************************************************************************************************************************/
+.all_dades {
+    text-align:left;    
+}
+
+.all_dades h4 {  
+    font-size:18px;
+    line-height: 1;
+    margin-bottom: 0;
+}
+
+.all_dades h5 {
+    font-size:14px;
+    line-height: 1;
+    margin-bottom: 0;
+    color: #858f93
+}
+
+.all_dades h6 {    
+    line-height: 1;
+    margin-bottom: 0;
+    color: #858f93
+}
+
+.all_dades preu {    
+    line-height: 1;
+    margin-bottom: 0;
+    color: #858f93
+}
+
+.all_dades p {
+    font-size:12px;
+    line-height: 1.2;
+    margin-bottom: 5px;
+}
+
+.item_line {
+    position: relative;
+}
+
+.item_reserva {
+    position: absolute;
+    right: 0;
+    bottom: 10px;
+}
+
+.items_comptador {
+    display: none;
+    -webkit-user-select: none; /* Safari */        
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* IE10+/Edge */
+    user-select: none; /* Standard */
+}
+
+.items_comptador a {    
+    padding: 0 25px;
+}
+
+.noti-container {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+}
+
+#notificacions {
+    width: 250px;
+}
+
+#alacistella {
+    display: none;
+    width: 250px;
+}
+/**************************************************************************************************************************************************************************/
+
+/**************************************************************************************************************************************************************************/
+/* productes avançats*/
+/**************************************************************************************************************************************************************************/
+.producte {
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 8px solid #dddddd;
+}
+
+.pr_dades {
+    text-align:left;    
+}
+
+.pr_dades h4 {  
+    font-size:18px;
+    line-height: 1;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.pr_dades h5 {
+    font-size:14px;
+    line-height: 1;
+    margin-bottom: 10px;
+    color: #858f93
+}
+
+.pr_dades h6 {    
+    line-height: 1;
+    margin-bottom: 0;
+    color: #858f93
+}
+
+.pr_image {
+    margin: auto;
+}
+
+.pr_image img {
+    width: 100%;
+}
+
+.pr_preu {    
+    text-align: left;
+}
+
+.pr_preu p {    
+    margin: 0 0 .5em 0;
+
+}
+
+.pricer {
+    float: right;
+}
+
+.pricer input {
+    width: 50px;
+    display: inline-block;
+    float: right;
+    text-align: center;
+}
+
+.pricer a {
+    display: inline-block;
+    float: right;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.pr_dades p {
+    font-size:12px;
+    line-height: 1.2;
+    margin-bottom: 5px;
+    text-align: justify;
+}
+
+td.price {
+    text-align: center;
+}
+
+#carret {
+/*    min-height: 100px;
+    border: 1px solid;
+    padding: 1em;
+    border-color: #ccc;
+*/
+}
+
+table.carret_total td {
+    padding: 0.25em 0.75em;
+}
+
+h3 .carret_total, h4 .carret_total {
+    margin: 0;
+}
+
+table.special {
+    margin: 0;
+}
+/**************************************************************************************************************************************************************************/
+
+/**************************************************************************************************************************************************************************/
+/* load GIF */
+/**************************************************************************************************************************************************************************/
+.loading {
+    background: url("../img/loading.gif") no-repeat scroll center center rgb(0, 0, 0);
+    zoom: 1;
+	filter: alpha(opacity=70);
+	opacity: 0.7;
+    display: none;
+    height: 100%;
+    overflow: auto;
+    position: fixed;
+    text-align: center;
+    z-index: 1000;
+    left:0;
+    right:0;
+    top:0;
+    bottom:0;
+}
+/**************************************************************************************************************************************************************************/
+
+
+/**************************************************************************************************************************************************************************/
+/* Edit Activity */
+/**************************************************************************************************************************************************************************/
+.session_block {
+    border: 1px solid #ccc;
+    padding: 10px 15px 0px;
+}
+
+.enviament-subgroup {
+    margin-left: 15px;
+}
+/**************************************************************************************************************************************************************************/
+
+/**************************************************************************************************************************************************************************/
+/* Front */
+/**************************************************************************************************************************************************************************/
+#dades_inscrits {
+    width: 100%;
+    margin-bottom: 30px;
+    padding-top: 0;
+}
+input[type="checkbox"] + label, input[type="radio"] + label {
+    text-align: left;
+}
+/**************************************************************************************************************************************************************************/

@@ -1,0 +1,6 @@
+Sitemap: http://bagesterradevins.cat/sitemap.xml
+User-agent: *
+Disallow: /humans.txt
+Disallow: /cgi-bin
+User-agent: Googlebot-Image
+Disallow: /
