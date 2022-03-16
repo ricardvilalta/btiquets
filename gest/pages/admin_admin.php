@@ -2,12 +2,12 @@
     
     if($_SESSION['user_id']==$SUPERUSER && $accountuid<0)
     {
-        $administradors = GetDBData("administradors","","name");
+        $administradors = GetDBData("administradors","","nom");
     }
     else
     {        
         $compte = GetAccountfromUserInfo($mysqli,$_SESSION['user_id']);
-        $administradors = GetDBData("equip","propietari=".$compte,"name");
+        $administradors = GetDBData("administradors","propietari=".$compte['id'],"nom");
     }   
 ?>
 

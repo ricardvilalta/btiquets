@@ -239,7 +239,7 @@ if(isset($_GET['id']))
                 case 28:
                     include('admin_client.php');
                     break;
-                case 27:
+                case 29:
                     include('edit_client.php');
                     break;
                 default:                

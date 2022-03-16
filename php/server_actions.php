@@ -425,9 +425,16 @@
 
             case 'edit_client':    
                 $mydata = array();            
-                $mydata['name']=addslashes($_POST["nom"]);
-                $mydata['cognoms']=addslashes($_POST["cognom"]);
-                $mydata['type']=intval($_POST["type"]);
+                $mydata['nom_entitat']=addslashes($_POST["nom_entitat"]);
+                $mydata['nom_contacte']=addslashes($_POST["nom_contacte"]);
+                $mydata['tel']=addslashes($_POST["tel"]);
+                $mydata['mail']=addslashes($_POST["mail"]);
+                $mydata['adr_1']=addslashes($_POST["adr_1"]);
+                $mydata['cp']=addslashes($_POST["cp"]);
+                $mydata['ciutat']=addslashes($_POST["ciutat"]);
+                $mydata['pais']=addslashes($_POST["pais"]);
+                $mydata['nif']=addslashes($_POST["nif"]);
+                $mydata['genere']=intval($_POST["genere"]);
                 $mydata['propietari']=intval($_POST["propietari"]);
                 $ret = InsertDBData("clients",$mydata,$_POST["id"]);
                 break;
@@ -442,9 +449,9 @@
 
             case 'edit_espai':
                 $mydata = array();            
-                $mydata['name']=addslashes($_POST["nom"]);
-                $mydata['cognoms']=addslashes($_POST["cognom"]);
-                $mydata['type']=intval($_POST["type"]);
+                $mydata['nom']=addslashes($_POST["nom"]);
+                $mydata['descripcio']=addslashes($_POST["descripcio"]);
+                $mydata['estat']=intval($_POST["estat"]);
                 $mydata['propietari']=intval($_POST["propietari"]);
                 $ret = InsertDBData("espais",$mydata,$_POST["id"]);
                 break;
@@ -459,15 +466,13 @@
 
             case 'edit_administrador':
                 $mydata = array();            
-                $mydata['name']=addslashes($_POST["nom"]);
-                $mydata['cognoms']=addslashes($_POST["cognom"]);
-                $mydata['type']=intval($_POST["type"]);
+                $mydata['nom']=addslashes($_POST["nom"]);
                 $mydata['propietari']=intval($_POST["propietari"]);
-                $ret = InsertDBData("espais",$mydata,$_POST["id"]);
+                $ret = InsertDBData("administradors",$mydata,$_POST["id"]);
                 break;
 
             case 'delete_administrador':
-                $ret = DelDBData("espais",intval($_POST["id"]));
+                $ret = DelDBData("administradors",intval($_POST["id"]));
                 break;
             
             case 'copy_administrador':

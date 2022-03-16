@@ -2,12 +2,12 @@
     
     if($_SESSION['user_id']==$SUPERUSER && $accountuid<0)
     {
-        $espais = GetDBData("espais","","name");
+        $espais = GetDBData("espais","","nom");
     }
     else
     {        
         $compte = GetAccountfromUserInfo($mysqli,$_SESSION['user_id']);
-        $espais = GetDBData("espais","propietari=".$compte,"name");
+        $espais = GetDBData("espais","propietari=".$compte,"nom");
     }   
 ?>
 
@@ -108,7 +108,8 @@
                                     ?>
                                     <tr id='<?php echo $espai[0]; ?>'>
                                         <td><?php echo $espai[0]; ?></td>
-                                        <td><?php echo $espai[1]; ?></td>                                   
+                                        <td><?php echo $espai[1]; ?></td>
+                                        <td><?php echo (intval($espai[3])==1?"ACTIU":"INACTIU"); ?></td>                                 
                                     </tr>
                                     <?php
                                     }

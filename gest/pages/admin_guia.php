@@ -7,7 +7,7 @@
     else
     {        
         $compte = GetAccountfromUserInfo($mysqli,$_SESSION['user_id']);
-        $guies = GetDBData("guies","propietari=".$compte,"name");
+        $guies = GetDBData("guies","propietari=".$compte['id'],"name");
     }   
 ?>
 

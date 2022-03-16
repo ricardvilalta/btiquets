@@ -6,18 +6,18 @@
 
     if($id>0)
     {
-        $sql="SELECT * FROM guies WHERE id='$id'";
+        $sql="SELECT * FROM espais WHERE id='$id'";
         $res = $mysqli->query($sql);
         $row = $res->fetch_row();
         $nom = stripslashes($row[1]);
-        $cognom = stripslashes($row[2]);
-        $type = intval($row[3]);
+        $descripcio = stripslashes($row[2]);
+        $estat = intval($row[3]);
     }
     else
     {   
         $nom = "";
-        $cognom = "";        
-        $type = "";
+        $descripcio = "";        
+        $estat = 0;
     }
 ?>
 
@@ -27,42 +27,14 @@
     {     
         
         $('#save').one('click',function(){
-            validate_guia();
+            validate_espai();
         });
         
         $('#cancel').one('click',function(){
-            window.location.href = '/admin/22';
-        });
+            window.location.href = '/admin/24';
+        });   
         
-        function ResetEvents()
-        {                            
-            $('.del_image').off('click');
-            $('.del_image').on('click',function(){
-                $(this).parent().parent().remove();
-                
-                $.ajax({  
-                    type: "POST",  
-                    url: "<?php echo $rootfolder; ?>" + "/php/server_actions.php",  
-                    data: {
-                        op:"delete_logo_image",
-                        path:$(this).parent().next().attr('path'),
-                        id:<?php echo $id; ?>
-                    },
-                });
-            });
-            
-            $('.img_frame').hover(function(){
-                $(this).find('.img_options').show();
-                $(this).find('img').fadeTo(0,0.2);
-                
-                },function(){
-                    $(this).find('.img_options').hide();
-                    $(this).find('img').fadeTo(0,1);
-            });
-        } 
-                
-        
-        function validate_guia()
+        function validate_espai()
         {
             $('#edit_name').val()=="" ? $('#edit_name').parent().addClass('has-error') : $('#edit_name').parent().removeClass('has-error');            
 
@@ -72,22 +44,22 @@
                     type: "POST",  
                     url: "<?php echo $rootfolder; ?>" +"php/server_actions.php",  
                     data: {
-                        op:"edit_guia",
+                        op:"edit_espai",
                         id:'<?php echo $id; ?>',
                         nom:$('#edit_name').val(),
-                        cognom:$('#edit_cognom').val(),
-                        type:$('#edit_type').val(),
+                        descripcio:$('#edit_descricio').val(),
+                        estat:$('#edit_estat').val(),
                         propietari:'<?php echo $compte["id"]; ?>',
                     },
                 }).success(function(ret)
                 {
-                    window.location.href = '/admin/22';
+                    window.location.href = '/admin/24';
                 });
             }
             else
             {
                 $('#save').one('click',function(){
-                    validate_guia();
+                    validate_espai();
                 });
             }
         }
@@ -96,7 +68,7 @@
 
 <div class="row">
     <div class="col-lg-12">
-        <h1 class="page-header">Edita el guia</h1>
+        <h1 class="page-header">Edita l'espai</h1>
     </div>
     <!-- /.col-lg-12 -->
 </div>
@@ -109,7 +81,7 @@
                     <?php
                     if($id==-1)
                     {
-                        echo "<h4>" . "Nou guia" . "</h4>";
+                        echo "<h4>" . "Nou espai" . "</h4>";
                     }
                     else
                     {
@@ -133,16 +105,16 @@
                         </div>
                         <div class="col-lg-6">
                             <div class="form-group">
-                                <label>Cognom</label>
-                                <input id="edit_cognom" class="form-control" value="<?php echo $cognom; ?>">
+                                <label>Descripció</label>
+                                <input id="edit_descricio" class="form-control" value="<?php echo $descripcio; ?>">
                             </div>
                         </div>
                         <div class="col-lg-3">    
                             <div class="form-group">
-                                <label>Tipus</label>
-                                <select id="edit_type" class="form-control">
-                                    <option value='1' <?php if($type==1) echo 'selected="selected"'; ?>>1</option>
-                                    <option value='2' <?php if($type==2) echo 'selected="selected"'; ?>>2</option>
+                                <label>Estat</label>
+                                <select id="edit_estat" class="form-control">
+                                    <option value='1' <?php if($estat==1) echo 'selected="selected"'; ?>>Actiu</option>
+                                    <option value='0' <?php if($estat==0) echo 'selected="selected"'; ?>>Inactiu</option>
                                 </select>
                             </div> 
                         </div>                                                                     

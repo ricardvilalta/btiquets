@@ -178,12 +178,12 @@
                 </li>
                 <li>
                     <a href="/admin/24"><i class="fa fa-university fa-fw"></i> Espais</a>
+                </li>                
+                <li>
+                    <a href="/admin/28"><i class="fa fa-users fa-fw"></i> Clients</a>
                 </li>
                 <li>
                     <a href="/admin/26"><i class="fa fa-user fa-fw"></i> Administrador</a>
-                </li>
-                <li>
-                    <a href="/admin/28"><i class="fa fa-users fa-fw"></i> Clients</a>
                 </li>
                 <?php
                 }
