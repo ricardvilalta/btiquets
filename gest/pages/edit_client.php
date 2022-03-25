@@ -123,12 +123,23 @@
                                 <label>Nom contacte</label>
                                 <input id="edit_name_2" class="form-control" value="<?php echo $nom_contacte; ?>">
                             </div>
-                        </div>
+                        </div>                        
                         <div class="col-lg-6">
                             <div class="form-group">
                                 <label>NIF</label>
                                 <input id="edit_nif" class="form-control" value="<?php echo $nif; ?>">
                             </div>
+                        </div>
+                        <div class="col-lg-6">    
+                            <div class="form-group">
+                                <label>Genere</label>
+                                <select id="edit_genere" class="form-control">
+                                    <option value="-1" <?php if($genere<=0) echo 'selected'; ?>>-</option>
+                                    <option value="1" <?php if($genere==1) echo 'selected'; ?>>Home</option>
+                                    <option value="2" <?php if($genere==2) echo 'selected'; ?>>Dona</option>
+                                    <option value="3" <?php if($genere==3) echo 'selected'; ?>>No binari</option>
+                                </select>
+                            </div> 
                         </div>
                         <div class="col-lg-6">
                             <div class="form-group">
@@ -141,18 +152,7 @@
                                 <label>Mail</label>
                                 <input id="edit_mail" class="form-control" value="<?php echo $mail; ?>">
                             </div>
-                        </div>
-                        <div class="col-lg-3">    
-                            <div class="form-group">
-                                <label>Genere</label>
-                                <select id="edit_genere" class="form-control">
-                                    <option value="-1" <?php if($genere<=0) echo 'selected'; ?>>-</option>
-                                    <option value="1" <?php if($genere==1) echo 'selected'; ?>>Home</option>
-                                    <option value="2" <?php if($genere==2) echo 'selected'; ?>>Dona</option>
-                                    <option value="3" <?php if($genere==3) echo 'selected'; ?>>No binari</option>
-                                </select>
-                            </div> 
-                        </div> 
+                        </div>                        
                         <div class="col-lg-6">
                             <div class="form-group">
                                 <label>Adreça</label>

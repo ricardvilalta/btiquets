@@ -34,6 +34,7 @@
 
     <!-- Bootstrap Core CSS -->
     <link href="/gest/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/front/assets/css/default.css" rel="stylesheet">
 
     <!-- MetisMenu CSS -->
     <link href="/gest/bower_components/metisMenu/dist/metisMenu.min.css" rel="stylesheet">
