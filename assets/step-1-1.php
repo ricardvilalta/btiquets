@@ -85,7 +85,7 @@
                             str += hora;
                             str += '<br> (';
                             str += freeplaces;
-                            str += ' <?php if($box['id']==337 || $box['id']==342  || $box['id']==343 || $box['id']==354  || $box['id']==369  || $box['id']==375 || $box['id']==376) echo "grup/s disponible/s"; else echo translate("places", $lang); ?>)';
+                            str += ' <?php if($box['id']==337 || $box['id']==342  || $box['id']==343 || $box['id']==354  || $box['id']==369  || $box['id']==375 || $box['id']==376 || $box['id']==552) echo "grup/s disponible/s"; else echo translate("places", $lang); ?>)';
                             str += '</label>';
                         }
                     }

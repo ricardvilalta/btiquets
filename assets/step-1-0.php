@@ -1,6 +1,80 @@
 <?php    
 // ESDEVENIMENT ÚNIC i PRODUCTES SIMPLES
 // PAS 1
+
+if($box['id']==502 || $box['id']==510 || $box['id']==511 || $box['id']==207) // TRANSÈQUIA 2022
+{
+    $dadesindividuals = 
+    '<div class="row uniform dades_linia">
+        <div class="3u">
+            <label class="formulari">Gènere</label>
+            <div class="select-wrapper">
+                <select class="camp_1 required">
+                    <option value="-1">-</option>
+                    <option value="1">Home</option>
+                    <option value="2">Dona</option>
+                    <option value="3">No binari</option>
+                </select>
+            </div>
+        </div>
+        <div class="6u">
+            <label class="formulari">Nom i Cognoms</label>
+            <input class="required camp_2" type="text" />
+        </div>
+        <div class="3u$">
+            <label class="formulari">DNI</label>
+            <input class="required camp_3" type="text"/>
+        </div>
+        <div class="12u$(xsmall)">
+            <input type="checkbox" class="camp_4">
+            <label>Participant menor de 18 anys. Cal emplenar i portar signat el <a href="https://transequia.cat/wp-content/uploads/2022/02/AUTORITZACIO-DE-MENORS-2022.pdf" target="_blank">document d\'autorització</a> el dia de la Transéquia</label>
+        </div>
+    </div>';
+}
+else if($box['id']==548) // ROMÀNIC AL BAGES
+{
+    $dadesindividuals = '<div class="row uniform dades_linia">\
+        <div class="3u">\
+            <label class="formulari">Gènere</label>\
+            <div class="select-wrapper">\
+                <select class="camp_1 required">\
+                    <option value="-1">-</option>\
+                    <option value="1">Home</option>\
+                    <option value="2">Dona</option>\
+                    <option value="3">No binari</option>\
+                </select>\
+            </div>\
+        </div>\
+        <div class="6u">\
+            <label class="formulari">Nom i Cognoms</label>\
+            <input class="required camp_2" type="text"/>\
+        </div>\
+        <div class="3u$">\
+            <label class="formulari">Telèfon</label>\
+            <input class="required camp_3" type="text"/>\
+        </div>\
+        <div class="6u">\
+            <label class="formulari">Email</label>\
+            <input class="required camp_4" type="text" />\
+        </div>\
+        <div class="3u">\
+            <label class="formulari">Municipi</label>\
+            <input class="required camp_5" type="text"/>\
+        </div>\
+        <div class="3u$">\
+            <label class="formulari">Edat</label>\
+            <div class="select-wrapper">\
+                <select class="camp_6 required">\
+                    <option value="1">0-11 anys</option>\
+                    <option value="2">12-17 anys</option>\
+                    <option value="3">31-60 anys</option>\
+                    <option value="4">+60 anys</option>\
+                </select>\
+            </div>\
+        </div>\
+    </div>';
+}
+
 ?>
 
 <script type="text/javascript">
@@ -99,7 +173,7 @@
                 if($("#dades_inscrits").length) {
                     for(var i=0;i<n_elements;i++)
                     {
-                        $('#dades_inscrits').append('<div class="row uniform dades_linia"><div class="3u"><label class="formulari">Gènere</label><div class="select-wrapper"><select class="camp_1 required"><option value="-1">-</option><option value="1">Home</option><option value="2">Dona</option><option value="3">No binari</option></select></div></div><div class="6u"><label class="formulari">Nom i Cognoms</label><input class="required camp_2" type="text" name="name'+i+'" id="name'+i+'" /></div><div class="3u$"><label class="formulari">DNI</label><input class="required camp_3" type="text" name="dni'+i+'" id="dni'+i+'" /></div><div class="12u$(xsmall)"><input type="checkbox" class="camp_4" name="menor'+i+'" id="menor'+i+'" ><label for="menor'+i+'">Participant menor de 18 anys. Cal emplenar i portar signat el <a href="https://transequia.cat/wp-content/uploads/2022/02/AUTORITZACIO-DE-MENORS-2022.pdf" target="_blank">document d\'autorització</a> el dia de la Transéquia</label></div></div>');
+                        $('#dades_inscrits').append('<?php echo $dadesindividuals;?>');
                     }
                 }
             }

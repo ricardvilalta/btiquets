@@ -138,7 +138,8 @@
                                                 <h4 class=""><?php echo $box['name']; ?></h4>
                                                 <h5 class=""><?php echo $compte['nom']; ?></h5>
                                             </div>
-                                            <img src='<?php echo "/boxes/box_" . $box["id"] . "/box_image_0_medium.jpg"; ?>' alt="<?php echo $box['name']; ?>">
+                                            <!-- <img src='<?php echo "/boxes/box_" . $box["id"] . "/box_image_0_medium.jpg"; ?>' alt="<?php echo $box['name']; ?>"> -->
+                                            <img src='<?php echo "/boxes/box_" . $box["id"] . "/box_image_0.jpg"; ?>' alt="<?php echo $box['name']; ?>">
                                         </a>
                                         <?php
                                         }

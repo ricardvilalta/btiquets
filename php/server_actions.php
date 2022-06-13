@@ -371,6 +371,61 @@
                 $ret = DeleteCompte($mysqli,$_POST["id"]);
                 break;
 
+            case 'edit_servei':                
+
+                if(intval($_POST["client"])==-1) {
+                    $mydata = array();   
+                    $mydata['nom_entitat']=addslashes($_POST["nom_entitat"]);
+                    $mydata['nom_contacte']=addslashes($_POST["nom_contacte"]);
+                    $mydata['tel']=addslashes($_POST["tel"]);
+                    $mydata['mail']=addslashes($_POST["mail"]);
+                    $mydata['adr_1']=addslashes($_POST["adr_1"]);
+                    $mydata['cp']=addslashes($_POST["cp"]);
+                    $mydata['ciutat']=addslashes($_POST["ciutat"]);
+                    $mydata['pais']=addslashes($_POST["pais"]);
+                    $mydata['nif']=addslashes($_POST["nif"]);
+                    $mydata['genere']=intval($_POST["genere"]);
+                    $mydata['propietari']=intval($_POST["propietari"]);
+                    $clientid = InsertDBData("clients",$mydata,$_POST["id"]);
+                }
+                else {
+                    $clientid = intval($_POST["client"]);
+                }
+
+                $mydata = array();   
+                $mydata['client']=$clientid;
+                $mydata['estat']=intval($_POST["estat"]);
+                $mydata['pagament']=intval($_POST["pagament"]);
+                $mydata['administrador']=intval($_POST["admin"]);
+                $mydata['notes']=addslashes($_POST["notes"]);
+                $mydata['activitat']=intval($_POST["activitat"]);
+                $mydata['espai_1']=intval($_POST["espai1"]);
+                $mydata['espai_2']=intval($_POST["espai2"]);
+                $mydata['espai_3']=intval($_POST["espai3"]);
+                $mydata['espai_4']=intval($_POST["espai4"]);
+                $mydata['guia_1']=intval($_POST["guia1"]);
+                $mydata['guia_2']=intval($_POST["guia2"]);
+                $mydata['guia_3']=intval($_POST["guia3"]);
+                $mydata['guia_4']=intval($_POST["guia4"]);
+                $mydata['base_total']=floatval($_POST["base_total"]);
+                $mydata['iva_total']=floatval($_POST["iva_total"]);
+                $mydata['import_pagat']=floatval($_POST["import_pagat"]);
+                $mydata['tipus_pagament']=intval($_POST["tipus_pagament"]);
+                $mydata['tipus_servei']=intval($_POST["tipus_servei"]);
+                $mydata['notes_pagament']=addslashes($_POST["notes_pagament"]);
+                $mydata['propietari']=intval($_POST["propietari"]);
+                $ret = InsertDBData("serveis",$mydata,$_POST["id"]);
+
+                break;
+
+            case 'delete_servei':
+                $ret = DelDBData("serveis",intval($_POST["id"]));
+                break;
+            
+            case 'copy_servei':
+                //$ret = CopyGuia($mysqli,intval($_POST["id"]));
+                break;
+
             case 'edit_guia':    
                 $mydata = array();            
                 $mydata['name']=addslashes($_POST["nom"]);
@@ -385,23 +440,6 @@
                 break;
             
             case 'copy_guia':
-                //$ret = CopyGuia($mysqli,intval($_POST["id"]));
-                break;
-
-            case 'edit_activitat':    
-                $mydata = array();            
-                $mydata['name']=addslashes($_POST["nom"]);
-                $mydata['cognoms']=addslashes($_POST["cognom"]);
-                $mydata['type']=intval($_POST["type"]);
-                $mydata['propietari']=intval($_POST["propietari"]);
-                $ret = InsertDBData("activitats",$mydata,$_POST["id"]);
-                break;
-
-            case 'delete_activitat':
-                $ret = DelDBData("activitats",intval($_POST["id"]));
-                break;
-            
-            case 'copy_activitat':
                 //$ret = CopyGuia($mysqli,intval($_POST["id"]));
                 break;
 
@@ -461,6 +499,25 @@
                 break;
             
             case 'copy_espai':
+                //$ret = CopyGuia($mysqli,intval($_POST["id"]));
+                break;
+
+            case 'edit_activitat':
+                $mydata = array();            
+                $mydata['nom']=addslashes($_POST["nom"]);
+                $mydata['descripcio']=addslashes($_POST["descripcio"]);
+                $mydata['espai']=intval($_POST["espai"]);
+                $mydata['preu']=intval($_POST["preu"]);
+                $mydata['tipus']=intval($_POST["tipus"]);
+                $mydata['propietari']=intval($_POST["propietari"]);
+                $ret = InsertDBData("activitats",$mydata,$_POST["id"]);
+                break;
+
+            case 'delete_activitat':
+                $ret = DelDBData("activitats",intval($_POST["id"]));
+                break;
+            
+            case 'copy_activitat':
                 //$ret = CopyGuia($mysqli,intval($_POST["id"]));
                 break;
 

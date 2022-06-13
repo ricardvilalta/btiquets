@@ -168,7 +168,10 @@
                 if($_SESSION['user_id']==$SUPERUSER || $compte['versio']==2)
                 {?>
                 <li>
-                    <a href="/admin/18"><i class="fa fa-camera fa-fw"></i> Serveis</a>
+                    <a href="/admin/18"><i class="fa fa-desktop fa-fw"></i> Serveis</a>
+                </li>
+                <li>
+                    <a href="/admin/30"><i class="fa fa-camera fa-fw"></i> Activitats</a>
                 </li>
                 <li>
                     <a href="/admin/20"><i class="fa fa-money fa-fw"></i> Preus</a>
@@ -183,7 +186,7 @@
                     <a href="/admin/28"><i class="fa fa-users fa-fw"></i> Clients</a>
                 </li>
                 <li>
-                    <a href="/admin/26"><i class="fa fa-user fa-fw"></i> Administrador</a>
+                    <a href="/admin/26"><i class="fa fa-user fa-fw"></i> Administradors</a>
                 </li>
                 <?php
                 }

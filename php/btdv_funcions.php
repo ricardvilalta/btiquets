@@ -680,7 +680,8 @@ function DelSpecificDBData($DBName, $DBField, $DBValue, $DBField_not = "", $DBVa
                 while ( $row = $result->fetch_row() )
                 {   
                     // 1a condició: que exisiteixi imatge principal
-                    if(file_exists("./../boxes/box_" . $row[0] . "/box_image_0_medium.jpg"))
+                    // if(file_exists("./../boxes/box_" . $row[0] . "/box_image_0_medium.jpg"))
+                    if(file_exists("./../boxes/box_" . $row[0] . "/box_image_0.jpg"))
                     {
                         $b_visible = true;
 
@@ -1960,20 +1961,36 @@ function DelSpecificDBData($DBName, $DBField, $DBValue, $DBField_not = "", $DBVa
         return $ret;
     }
 
-    function GetReservationList($mysqli,$user_id=-1)
+    function GetReservationListInfo($mysqli,$user_id=-1)
     {
-        $data = array();
-        
-        
         if($user_id!=-1)
         {
-            $result = $mysqli->query("SELECT res.* FROM reserva AS res,box_data AS bdata WHERE res.box_id=bdata.id AND bdata.propietari=$user_id ORDER BY res.data DESC, res.id DESC LIMIT 5000");
+            $sql = "SELECT COUNT(*) FROM reserva AS res,box_data AS bdata WHERE res.box_id=bdata.id AND bdata.propietari=$user_id";
         }
         else
         {
-            $result = $mysqli->query("SELECT * FROM reserva ORDER BY data DESC, id DESC LIMIT 5000");
+            $sql = "SELECT COUNT(*) FROM reserva ORDER BY data DESC, id";
+        } 
+        $result = $mysqli->query($sql);
+        $lines = $result->fetch_row()[0];
+        return $lines;
+    }
+    function GetReservationList($mysqli,$user_id=-1,$number=100,$pag=1)
+    {
+        $data = array();
+        $offset = ($pag-1)*$number;
+        $limitstr = "LIMIT ".$offset.','.$number;        
+        
+        if($user_id!=-1)
+        {
+            $sql = "SELECT res.* FROM reserva AS res,box_data AS bdata WHERE res.box_id=bdata.id AND bdata.propietari=$user_id ORDER BY res.data DESC, res.id DESC ".$limitstr;
+        }
+        else
+        {
+            $sql = "SELECT * FROM reserva ORDER BY data DESC, id DESC ".$limitstr;
         }                
-                
+        $result = $mysqli->query($sql);
+        // error_log($sql);
         if($result != null)
         {
             while ( $row = $result->fetch_row() )
@@ -1999,10 +2016,13 @@ function DelSpecificDBData($DBName, $DBField, $DBValue, $DBField_not = "", $DBVa
         return $data;
     }
 
-    function GetReservationListFromBox($mysqli,$boxid=-1,$state=-999,$userid=-1,$did1="",$did2="",$did3="",$did4="")
+    function GetReservationListFromBox($mysqli,$boxid=-1,$state=-999,$userid=-1,$did1="",$did2="",$number=100,$pag=1)
     {
         global $zone;
         $data = array();
+        if($pag<=0)$pag=1;
+        $offset = ($pag-1)*$number;
+        $limitstr = "LIMIT ".$offset.','.$number;
         
         date_default_timezone_set($zone);
         
@@ -2025,7 +2045,7 @@ function DelSpecificDBData($DBName, $DBField, $DBValue, $DBField_not = "", $DBVa
         {
             if($boxid>0)
             {
-                $sql = "SELECT * FROM reserva WHERE box_id=$boxid AND `data` >= '$date_ini' AND `data` <= '$date_fin' ORDER BY data DESC LIMIT 5000";
+                $sql = "SELECT * FROM reserva WHERE box_id=$boxid AND `data` >= '$date_ini' AND `data` <= '$date_fin' ORDER BY data DESC ";
             }
             else
             {
@@ -2033,16 +2053,16 @@ function DelSpecificDBData($DBName, $DBField, $DBValue, $DBField_not = "", $DBVa
                 {
                     if($userid==1)
                     {
-                        $sql = "SELECT res.* FROM reserva AS res,box_data AS bdata WHERE res.box_id=bdata.id AND res.data >= '$date_ini' AND res.data <= '$date_fin' ORDER BY res.data DESC LIMIT 5000";
+                        $sql = "SELECT res.* FROM reserva AS res,box_data AS bdata WHERE res.box_id=bdata.id AND res.data >= '$date_ini' AND res.data <= '$date_fin' ORDER BY res.data DESC ";
                     }
                     else
                     {
-                        $sql = "SELECT res.* FROM reserva AS res,box_data AS bdata WHERE res.box_id=bdata.id AND bdata.propietari=$userid AND res.data >= '$date_ini' AND res.data <= '$date_fin' ORDER BY res.data DESC LIMIT 5000";
+                        $sql = "SELECT res.* FROM reserva AS res,box_data AS bdata WHERE res.box_id=bdata.id AND bdata.propietari=$userid AND res.data >= '$date_ini' AND res.data <= '$date_fin' ORDER BY res.data DESC ";
                     }
                 }
                 else
                 {
-                    $sql = "SELECT * FROM reserva WHERE `data` >= '$date_ini' AND `data` <= '$date_fin' ORDER BY data DESC LIMIT 5000";
+                    $sql = "SELECT * FROM reserva WHERE `data` >= '$date_ini' AND `data` <= '$date_fin' ORDER BY data DESC ";
                 }
             }
         }
@@ -2050,21 +2070,22 @@ function DelSpecificDBData($DBName, $DBField, $DBValue, $DBField_not = "", $DBVa
         {
             if($boxid>0)
             {
-                $sql = "SELECT * FROM reserva WHERE box_id=$boxid AND confirmat=$state AND `data` >= '$date_ini' AND `data` <= '$date_fin' ORDER BY data DESC LIMIT 5000";
+                $sql = "SELECT * FROM reserva WHERE box_id=$boxid AND confirmat=$state AND `data` >= '$date_ini' AND `data` <= '$date_fin' ORDER BY data DESC ";
             }
             else
             {
                 if($userid!=-1)
                 {
-                    $sql = "SELECT res.* FROM reserva AS res,box_data AS bdata WHERE res.box_id=bdata.id AND bdata.propietari=$userid AND res.confirmat=$state AND res.data >= '$date_ini' AND res.data <= '$date_fin' ORDER BY res.data DESC LIMIT 5000";
+                    $sql = "SELECT res.* FROM reserva AS res,box_data AS bdata WHERE res.box_id=bdata.id AND bdata.propietari=$userid AND res.confirmat=$state AND res.data >= '$date_ini' AND res.data <= '$date_fin' ORDER BY res.data DESC ";
                 }
                 else
                 {
-                    $sql = "SELECT * FROM reserva WHERE confirmat=$state AND `data` >= '$date_ini' AND `data` <= '$date_fin' ORDER BY data DESC LIMIT 5000";
+                    $sql = "SELECT * FROM reserva WHERE confirmat=$state AND `data` >= '$date_ini' AND `data` <= '$date_fin' ORDER BY data DESC ";
                 }
             }  
         }
         
+        $sql .= $limitstr;
         error_log($sql);
         
         $result = $mysqli->query($sql);
@@ -2085,6 +2106,75 @@ function DelSpecificDBData($DBName, $DBField, $DBValue, $DBField_not = "", $DBVa
         }
         
         return $data;
+    }
+
+    function GetReservationListFromBoxInfo($mysqli,$boxid=-1,$state=-999,$userid=-1,$did1="",$did2="")
+    {
+        global $zone;
+        date_default_timezone_set($zone);
+        
+        $date_ini_aux = date_create_from_format('d-m-Y','1-1-2000');
+        $date_fin_aux = date_create_from_format('d-m-Y',date('d-m-Y'));
+
+        if($did1!="" && $did1!="-")
+        {
+            $date_ini_aux = date_create_from_format('d-m-Y',$did1);            
+        }
+        if($did2!="" && $did2!="-")
+        {
+            $date_fin_aux = date_create_from_format('d-m-Y',$did2);
+        }
+        
+        $date_ini = date_format($date_ini_aux,'Y-m-d');
+        $date_fin = date_format($date_fin_aux,'Y-m-d');                        
+        
+        if($state==-10)
+        {
+            if($boxid>0)
+            {
+                $sql = "SELECT COUNT(*) FROM reserva WHERE box_id=$boxid AND `data` >= '$date_ini' AND `data` <= '$date_fin' ORDER BY data DESC ";
+            }
+            else
+            {
+                if($userid!=-1)
+                {
+                    if($userid==1)
+                    {
+                        $sql = "SELECT COUNT(*) FROM reserva AS res,box_data AS bdata WHERE res.box_id=bdata.id AND res.data >= '$date_ini' AND res.data <= '$date_fin' ORDER BY res.data DESC ";
+                    }
+                    else
+                    {
+                        $sql = "SELECT COUNT(*) FROM reserva AS res,box_data AS bdata WHERE res.box_id=bdata.id AND bdata.propietari=$userid AND res.data >= '$date_ini' AND res.data <= '$date_fin' ORDER BY res.data DESC ";
+                    }
+                }
+                else
+                {
+                    $sql = "SELECT COUNT(*) FROM reserva WHERE `data` >= '$date_ini' AND `data` <= '$date_fin' ORDER BY data DESC ";
+                }
+            }
+        }
+        else
+        {
+            if($boxid>0)
+            {
+                $sql = "SELECT COUNT(*) FROM reserva WHERE box_id=$boxid AND confirmat=$state AND `data` >= '$date_ini' AND `data` <= '$date_fin' ORDER BY data DESC ";
+            }
+            else
+            {
+                if($userid!=-1)
+                {
+                    $sql = "SELECT COUNT(*) FROM reserva AS res,box_data AS bdata WHERE res.box_id=bdata.id AND bdata.propietari=$userid AND res.confirmat=$state AND res.data >= '$date_ini' AND res.data <= '$date_fin' ORDER BY res.data DESC ";
+                }
+                else
+                {
+                    $sql = "SELECT COUNT(*) FROM reserva WHERE confirmat=$state AND `data` >= '$date_ini' AND `data` <= '$date_fin' ORDER BY data DESC ";
+                }
+            }  
+        }
+        
+        $result = $mysqli->query($sql);
+        $lines = $result->fetch_row()[0];
+        return $lines;
     }
 
     function GetColReservationList($userid)
@@ -2644,7 +2734,7 @@ function DelSpecificDBData($DBName, $DBField, $DBValue, $DBField_not = "", $DBVa
     {
         $data=null;
                 
-        $reserves = GetReservationListFromBox($mysqli,$xid,$tid,$userid,$did1,$did2,$did3,$did4);
+        $reserves = GetReservationListFromBox($mysqli,$xid,$tid,$userid,$did1,$did2,5000);
         $sessio = GetSession($mysqli,$sid);
         $activitats = GetBoxes($mysqli);
         
@@ -2709,6 +2799,49 @@ function DelSpecificDBData($DBName, $DBField, $DBValue, $DBField_not = "", $DBVa
                     $headerarray[]="Nom-".$j;
                     $headerarray[]="DNI-".$j;
                     $headerarray[]="Menor-".$j;
+                }
+                fputcsv($output, $headerarray,";");
+            }
+            else
+            {
+                fputcsv($output, array('Data compra', 'Referència', 'Nom', 'Mail', 'Tel', 'Municipi', 'Comentari', 'Estat', 'Newsletter', 'Activitat', 'Sessió', 'PVP', 'Tiquets'),";");
+            }
+        }
+        else if($reserves[0]['box_id']==548)
+        {
+            $quant_modalities = explode(';',$reserves[0]['quantitat']);
+            $box = GetBox($mysqli,$reserves[0]['box_id']);
+            $price_modalities = decode_price($box['price'],false);
+            if(count($quant_modalities)>1 && $reserves[0]['quantitat']!="")
+            {
+                $headerarray = Array();
+                $headerarray[]="Data compra";
+                $headerarray[]="Referència";
+                $headerarray[]="Nom";
+                $headerarray[]="Mail";
+                $headerarray[]="Tel";
+                $headerarray[]="Municipi";
+                $headerarray[]="Comentari";
+                $headerarray[]="Estat";
+                $headerarray[]="Newsletter";
+                $headerarray[]="Activitat";
+                $headerarray[]="Sessió";
+                $headerarray[]="PVP";
+                $headerarray[]="Genere";
+                for($j=0;$j<count($price_modalities);$j++)
+                {
+                    $price = $price_modalities[$j];
+                    $aux = "Tiquets - " . $price['name'];
+                    $headerarray[]=$aux;
+                }
+                for($j=1;$j<=30;$j++)
+                {
+                    $headerarray[]="Gènere-".$j;
+                    $headerarray[]="Nom-".$j;
+                    $headerarray[]="Tel-".$j;
+                    $headerarray[]="Mail-".$j;
+                    $headerarray[]="Municipi-".$j;
+                    $headerarray[]="Edat-".$j;
                 }
                 fputcsv($output, $headerarray,";");
             }
@@ -2802,11 +2935,25 @@ function DelSpecificDBData($DBName, $DBField, $DBValue, $DBField_not = "", $DBVa
                     $sessiostr = "-";
                     break;
             }
+
+            $generestr = "-";
+            switch($reserva['genere'])
+            {
+                case 1:
+                    $generestr = "Home";
+                    break;
+                case 2:
+                    $generestr = "Dona";
+                    break;
+                case 3:
+                    $generestr = "No binari";
+                    break;
+            }
             
             if(count($quant_modalities)==0 || $reserva['quantitat']=="")
             {
                 $quantstr = $reserva['quant_total'];
-                fputcsv($output, array($reserva['data'],$reserva['ref'],$reserva['rnom'],$reserva['rmail'],$reserva['rtel'],$reserva['rmun'],$comentari,$estat,$reserva['newsletter'],$nom,$sessiostr,$reserva['total'],$quantstr),";");
+                fputcsv($output, array($reserva['data'],$reserva['ref'],$reserva['rnom'],$reserva['rmail'],$reserva['rtel'],$reserva['rmun'],$comentari,$estat,$reserva['newsletter'],$nom,$sessiostr,strtr($reserva['total'],'.',','),$quantstr),";");
             }
             else
             {                   
@@ -2822,29 +2969,19 @@ function DelSpecificDBData($DBName, $DBField, $DBValue, $DBField_not = "", $DBVa
                 $auxarray[]=$reserva['newsletter'];
                 $auxarray[]=$nom;
                 $auxarray[]=$sessiostr;
-                $auxarray[]=$reserva['total'];
+                $auxarray[]=strtr($reserva['total'],'.',',');
                 if($reserva['box_id']==502 || $reserva['box_id']==510 || $reserva['box_id']==511)
-                {
-                    $auxstr = "-";
-                    switch($reserva['genere'])
-                    {
-                        case 1:
-                            $auxstr = "Home";
-                            break;
-                        case 2:
-                            $auxstr = "Dona";
-                            break;
-                        case 3:
-                            $auxstr = "No binari";
-                            break;
-                    }
-                    $auxarray[]=$auxstr;
+                {                    
+                    $auxarray[]=$generestr;
                     $auxarray[]=$reserva['check_special'];
                     $auxarray[]=$reserva['check_1'];
                     $auxarray[]=$reserva['check_2'];
                     $auxarray[]=$reserva['check_3'];
                     $auxarray[]=$reserva['validat'];
                     $auxarray[]=$reserva['val_com'];
+                }
+                else if($reserva['box_id']==548) {
+                    $auxarray[]=$generestr;
                 }
                 for($j=0;$j<count($price_modalities);$j++)
                 {
@@ -2870,7 +3007,7 @@ function DelSpecificDBData($DBName, $DBField, $DBValue, $DBField_not = "", $DBVa
                         foreach($dades_info as $dades_iter)
                         {
                             $auxstr = "-";
-                            switch($dades_iter['genere'])
+                            switch($dades_iter['camp_1'])
                             {
                                 case 1:
                                     $auxstr = "Home";
@@ -2883,9 +3020,53 @@ function DelSpecificDBData($DBName, $DBField, $DBValue, $DBField_not = "", $DBVa
                                     break;
                             }
                             $auxarray[]=$auxstr;
-                            $auxarray[]=$dades_iter['nom'];
-                            $auxarray[]=$dades_iter['dni'];
-                            $auxarray[]=$dades_iter['menor'];
+                            $auxarray[]=$dades_iter['camp_2'];
+                            $auxarray[]=$dades_iter['camp_3'];
+                            $auxarray[]=$dades_iter['camp_4'];
+                        }
+                    }
+                }
+                else if($reserva['box_id']==548)
+                {
+                    if($reserva['dades']!="")
+                    {
+                        $dades_info = decode_dades($reserva['dades']);
+                        foreach($dades_info as $dades_iter)
+                        {
+                            $auxstr = "-";
+                            switch($dades_iter['camp_1'])
+                            {
+                                case 1:
+                                    $auxstr = "Home";
+                                    break;
+                                case 2:
+                                    $auxstr = "Dona";
+                                    break;
+                                case 3:
+                                    $auxstr = "No binari";
+                                    break;
+                            }
+                            $auxarray[]=$auxstr;
+                            $auxarray[]=$dades_iter['camp_2'];
+                            $auxarray[]=$dades_iter['camp_3'];
+                            $auxarray[]=$dades_iter['camp_4'];
+                            $auxarray[]=$dades_iter['camp_5'];
+                            switch($dades_iter['camp_6'])
+                            {
+                                case 1:
+                                    $auxstr = "0-11 anys";
+                                    break;
+                                case 2:
+                                    $auxstr = "12-17 anys";
+                                    break;
+                                case 3:
+                                    $auxstr = "31-60 anys";
+                                    break;
+                                case 4:
+                                    $auxstr = "+60 anys";
+                                    break;
+                            }
+                            $auxarray[]=$auxstr;
                         }
                     }
                 }
@@ -6517,11 +6698,19 @@ function AdminSession($mysqli,$sessionstr,$id)
                     $aux2 = explode('::',$aux1[$k]);
                     if(count($aux2)==3)
                     {
-                        $data[] = array('genere'=>$aux2[0],'nom'=>$aux2[1],'dni'=>$aux2[2],'menor'=>0);
+                        $data[] = array('camp_1'=>$aux2[0],'camp_2'=>$aux2[1],'camp_3'=>$aux2[2],'camp_4'=>0);
                     }
-                    else if(count($aux2)>=4)
+                    else if(count($aux2)==4)
                     {
-                        $data[] = array('genere'=>$aux2[0],'nom'=>$aux2[1],'dni'=>$aux2[2],'menor'=>intval($aux2[3]));
+                        $data[] = array('camp_1'=>$aux2[0],'camp_2'=>$aux2[1],'camp_3'=>$aux2[2],'camp_4'=>$aux2[3]);
+                    }
+                    else if(count($aux2)==5)
+                    {
+                        $data[] = array('camp_1'=>$aux2[0],'camp_2'=>$aux2[1],'camp_3'=>$aux2[2],'camp_4'=>$aux2[3],'camp_5'=>$aux2[4]);
+                    }
+                    else if(count($aux2)>=6)
+                    {
+                        $data[] = array('camp_1'=>$aux2[0],'camp_2'=>$aux2[1],'camp_3'=>$aux2[2],'camp_4'=>$aux2[3],'camp_5'=>$aux2[4],'camp_6'=>$aux2[5]);
                     }
                 }
             }

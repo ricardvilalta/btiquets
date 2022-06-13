@@ -22,7 +22,7 @@
             var id = $('#experiencies .success').attr('id');
             if(id!=undefined)
             {
-                window.location.href = '/admin/edit-activity/' + id;
+                window.open('/admin/edit-activity/' + id, '_blank');
             }
         });
         
@@ -30,7 +30,7 @@
             var id = $(this).attr('id');
             if(id!=undefined)
             {
-                window.location.href = '/admin/edit-activity/' + id;
+                window.open('/admin/edit-activity/' + id, '_blank');
             }
         });
         
@@ -126,7 +126,7 @@
                             <span class="caret"></span>
                         </button>
                         <ul class="dropdown-menu pull-right" role="menu">
-                            <li><a href="/admin/edit-activity/-1">Nova taquilla</a>
+                            <li><a href="/admin/edit-activity/-1" target="_blank">Nova taquilla</a>
                             </li>
                             <li><a id="edit_box">Edita taquilla</a>
                             </li>
@@ -184,7 +184,7 @@
                                         if($_SESSION['user_id']==$SUPERUSER)
                                         {
                                         ?>
-                                        <td><?php if($compte['nom']!=null) echo $compte['nom']; ?></td>
+                                        <td><?php if($compte!=null) echo $compte['nom']; ?></td>
                                         <?php
                                         }
                                         ?>

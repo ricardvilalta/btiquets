@@ -93,6 +93,9 @@
 
 <?php
 $submenu=-1;
+$page=1;
+$pagination=1;
+$xid=-1;$sid=-10;$tid=-10;$did1="";$did2="";
 if(isset($_GET['submenu']))
 {
     $submenu = $_GET['submenu'];
@@ -100,6 +103,34 @@ if(isset($_GET['submenu']))
 if(isset($_GET['id']))
 {
     $id = $_GET['id'];
+}
+if(isset($_GET['page']))
+{
+    $page = $_GET['page'];
+}
+if(isset($_GET['pagination']))
+{
+    $pagination = $_GET['pagination'];
+}
+if(isset($_GET['xid']))
+{
+    $xid = $_GET['xid'];
+}
+if(isset($_GET['tid']))
+{
+    $tid = $_GET['tid'];
+}
+if(isset($_GET['sid']))
+{
+    $sid = $_GET['sid'];
+}
+if(isset($_GET['did1']))
+{
+    $did1 = $_GET['did1'];
+}
+if(isset($_GET['did2']))
+{
+    $did2 = $_GET['did2'];
 }
 
 ?>  
@@ -242,6 +273,12 @@ if(isset($_GET['id']))
                     break;
                 case 29:
                     include('edit_client.php');
+                    break;
+                case 30:
+                    include('admin_activitat.php');
+                    break;
+                case 31:
+                    include('edit_activitat.php');
                     break;
                 default:                
                     include('admin-2.php');

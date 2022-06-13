@@ -28,13 +28,20 @@
                 
                 var dades_str = "";
                 $('.dades_linia').each(function(){
+                    // Actualitzat pel ROMÀNIC AL BAGES
                     dades_str+=$(this).find('.camp_1').val();
                     dades_str+='::';
                     dades_str+=$(this).find('.camp_2').val();
                     dades_str+='::';
                     dades_str+=$(this).find('.camp_3').val();
                     dades_str+='::';
-                    dades_str+=($(this).find('.camp_4').is(":checked")?1:0);
+                    dades_str+=$(this).find('.camp_4').val();
+                    dades_str+='::';
+                    dades_str+=$(this).find('.camp_5').val();
+                    dades_str+='::';
+                    dades_str+=$(this).find('.camp_6').val();
+                    // dades_str+='::';
+                    // dades_str+=($(this).find('.camp_4').is(":checked")?1:0);
                     dades_str+=';;';
                 });
 
@@ -158,11 +165,11 @@
         });                
 
         <?php
-        if($box['id']==502 || $box['id']==510 || $box['id']==511) // TRANSÈQUIA 2022
+        if($box['id']==502 || $box['id']==510 || $box['id']==511 || $box['id']==548) // TRANSÈQUIA 2022 / ROMÀNIC AL BAGES
         {?>
             $('#name').change(function(){
-                if($("#name0").length) {
-                    $("#name0").val($(this).val());
+                if($("#name").length) {
+                    $(".dades_linia").first().find('.camp_2').val($(this).val());
                 }
             });
         <?php
@@ -222,6 +229,7 @@
                     <label class="formulari"><?php if($box['com_aux']!="") echo $box['com_aux']; else echo translate("Comentaris", $lang); ?></label>
                     <textarea class="<?php if($box['com_obl']) echo 'required'; ?>" name="comment" id="comment"></textarea>
                 </div>
+
                 <?php
                 if($box['id']==502 || $box['id']==510 || $box['id']==511 || $box['id']==207) // TRANSÈQUIA 2022
                 {?>
@@ -242,6 +250,15 @@
                 <div id="dades_inscrits"></div>
                 <?php
                 }?>
+
+                <?php
+                if($box['id']==548) // ROMÀNIC AL BAGES
+                {?>
+                <label class="formulari">Cal emplenar les dades de cadascun dels participants</label>
+                <div id="dades_inscrits"></div>
+                <?php
+                }?>
+
                 <?php include('assets/checks.php'); ?>
                                 
                 <div class="12u$">

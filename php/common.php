@@ -26,6 +26,12 @@
     $ereserva_1 = array(-2 => "Pagament en curs", -1 => "Pagament denegat", 0 => "Pendent de pagament", 1 => "Reserva correcta", 2 => "Activitat realitzada", 3 => "Pre-reserva");
     $ereserva_2 = array(-2 => "Reserva en curs", -1 => "Reserva denegada", 0 => "Reserva enviada", 1 => "Reserva acceptada", 2 => "Reserva realitzada", 3 => "Pre-reserva");    
     $ereserva_3 = array(-2 => "Pagament en curs", -1 => "Pagament denegat", 0 => "Pendent de pagament", 1 => "Compra correcta", 2 => "Compra correcta", 3 => "Pre-reserva");
+    $estatsservei = array(-1 => "Pressupost", 0 => "Confirmat", 1 => "Realitzat");
+    $estatspagament = array(-1 => "Pendent", 0 => "Bestreta", 1 => "Pagat");
+    $tipusservei = array(-1 => "Indeterminat", 0 => "Particular", 1 => "Grup", 2 => "Agència");
+    $tipuspagament = array(-1 => "Indeterminat", 0 => "Transferència", 1 => "TPV", 2 => "Efectiu", 3 => "Xec", 4 => "Combinat");
+    $tipusclient = array(-1 => "Indeterminat", 0 => "Escola", 1 => "Família", 2 => "Adults", 3 => "AAVV");
+    $tipusactivitat = array(-1 => "Indeterminat", 0 => "Cultural", 1 => "Esport i salut", 2 => "Espiritual", 3 => "Promoció econòmica", 3 => "Fira i festes");
 
     const _TIPUSIVA = array(21,10,4,0);
     

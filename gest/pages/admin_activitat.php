@@ -2,12 +2,12 @@
     
     if($_SESSION['user_id']==$SUPERUSER && $accountuid<0)
     {
-        $serveis = GetDBData("serveis","","data_inicial DESC");
+        $activitats = GetDBData("activitats","","nom");
     }
     else
     {        
         $compte = GetAccountfromUserInfo($mysqli,$_SESSION['user_id']);
-        $serveis = GetDBData("serveis","propietari=".$compte['id'],"data_inicial DESC");
+        $activitats = GetDBData("activitats","propietari=".$compte['id'],"nom");
     }   
 ?>
 
@@ -17,11 +17,11 @@
     {    
         TableSelectionEvent();
         
-        $('#edit_servei').click(function(){
+        $('#edit_activitat').click(function(){
             var id = $('#experiencies .success').attr('id');
             if(id!=undefined)
             {
-                window.location.href = '/admin/edit-servei/' + id;
+                window.location.href = '/admin/edit-activitat/' + id;
             }
         });
         
@@ -29,11 +29,11 @@
             var id = $(this).attr('id');
             if(id!=undefined)
             {
-                window.location.href = '/admin/edit-servei/' + id;
+                window.location.href = '/admin/edit-activitat/' + id;
             }
         });
         
-        $('#delete_servei').click(function(){
+        $('#delete_activitat').click(function(){
             var id = $('#experiencies .success').attr('id');
             if(id!=undefined)
             {
@@ -43,7 +43,7 @@
                         type: "POST",  
                         url: "<?php echo $rootfolder; ?>" + "php/server_actions.php",  
                         data: {
-                            op:"delete_servei",
+                            op:"delete_activitat",
                             id:id
                         },
                         dataType: 'json'
@@ -60,7 +60,7 @@
 
 <div class="row">
     <div class="col-lg-12">
-        <h1 class="page-header">Serveis</h1>
+        <h1 class="page-header">Activitats</h1>
     </div>
     <!-- /.col-lg-12 -->
 </div>
@@ -70,7 +70,7 @@
         <!-- /.panel -->
         <div class="panel panel-default">
             <div class="panel-heading">
-                <i class="fa fa-tasks fa-fw"></i> Llista de serveis
+                <i class="fa fa-tasks fa-fw"></i> Llista d'activitats
                 <div class="pull-right">
                     <div class="btn-group">
                         <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
@@ -78,11 +78,11 @@
                             <span class="caret"></span>
                         </button>
                         <ul class="dropdown-menu pull-right" role="menu">
-                            <li><a href="/admin/edit-servei/-1">Nou servei</a>
+                            <li><a href="/admin/edit-activitat/-1">Nova activitat</a>
                             </li>
-                            <li><a id="edit_servei">Edita servei</a>
+                            <li><a id="edit_activitat">Edita activitat</a>
                             </li>
-                            <li><a id="delete_servei">Elimina servei</a>
+                            <li><a id="delete_activitat">Elimina activitat</a>
                             </li>
                         </ul>
                     </div>
@@ -97,25 +97,19 @@
                                 <thead>
                                     <tr>
                                         <th>#</th>
-                                        <th>Data</th>
-                                        <th>Data servei</th>
-                                        <th>Client</th>
-                                        <th>Activitat</th>                              
+                                        <th>Nom</th>
+                                        <th>Tipus</th>                                     
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <?php                
-                                    foreach($serveis as $servei)
+                                    foreach($activitats as $activitat)
                                     {
-                                        $client = GetDBItem('clients',$servei[1]);
-                                        $activitat = GetDBItem('espais',$servei[21]);
                                     ?>
-                                    <tr id='<?php echo $servei[0]; ?>'>
-                                        <td><?php echo $servei[0]; ?></td>
-                                        <td><?php echo $servei[9]; ?></td>
-                                        <td><?php echo $servei[10]; ?></td>
-                                        <td><?php echo $client[1]; ?></td>  
+                                    <tr id='<?php echo $activitat[0]; ?>'>
+                                        <td><?php echo $activitat[0]; ?></td>
                                         <td><?php echo $activitat[1]; ?></td>
+                                        <td><?php echo $activitat[2]; ?></td>                                    
                                     </tr>
                                     <?php
                                     }
