@@ -280,6 +280,12 @@ if(isset($_GET['did2']))
                 case 31:
                     include('edit_activitat.php');
                     break;
+                case 32:
+                    include('admin_descompte.php');
+                    break;
+                case 33:
+                    include('edit_descompte.php');
+                    break;
                 default:                
                     include('admin-2.php');
                     break;            

@@ -15,7 +15,7 @@
         {
             case 'insert_box':  // btiquets opt
             
-                $date_str = "";
+                $date_str = "1900-01-01";
                 if($_POST["edate"]!="")
                 {
                     $edata = date_create_from_format('d-m-Y',$_POST["edate"]);
@@ -76,8 +76,9 @@
                 if(!isset($_POST["enviament_id"])) $_POST["enviament_id"]="";
                 if(!isset($_POST["pagament"])) $_POST["pagament"]="";
                 if(!isset($_POST["enviament_str"])) $_POST["enviament_str"]="";
+                if(!isset($_POST["codi_descompte"])) $_POST["codi_descompte"]="";
                             
-                $ret = InsertBox($mysqli,intval($_POST["id"]),addslashes($_POST["name"]),addslashes($_POST["description"]),addslashes($_POST["details"]),addslashes($_POST["use"]),addslashes($_POST["price"]),addslashes($_POST["type"]),addslashes($_POST["quotes"]),addslashes($_POST["img"]),intval($_POST["activities"]),intval($_POST["n_min"]),intval($_POST["n_max"]),floatval($_POST["lat"]),floatval($_POST["destacat"]),intval($_POST["etype"]),$date_str,intval($_POST["etotal"]),intval($_POST["cellers"]),intval($_POST["patrimoni"]),intval($_POST["visites"]),intval($_POST["rutes"]),intval($_POST["destacat"]),intval($_POST["nou"]),intval($_POST["ocult"]),intval($_POST["no_online"]),addslashes($_POST["special_img"]),addslashes($_POST["qr_img"]),intval($_POST["edit_esceller"]),floatval($_POST["min_price"]),addslashes($_POST["name_es"]),addslashes($_POST["description_es"]),addslashes($_POST["details_es"]),addslashes($_POST["use_es"]),addslashes($_POST["quotes_es"]),addslashes($_POST["price_es"]),addslashes($_POST["name_en"]),addslashes($_POST["description_en"]),addslashes($_POST["details_en"]),addslashes($_POST["use_en"]),addslashes($_POST["quotes_en"]),addslashes($_POST["price_en"]),addslashes($_POST["ppt"]),addslashes($_POST["collaboradors"]),addslashes($_POST["sessions"]),addslashes($_POST["res_days"]),intval($_POST["close_time"]),intval($_POST["propietari"]),addslashes($_POST["sessio_unica"]),false,addslashes($_POST["col_mail"]),intval($_POST["com_obl"]),addslashes($_POST["com_aux"]),-1,addslashes($_POST["recordatori"]),addslashes($_POST["recordatori_es"]),addslashes($_POST["recordatori_en"]),intval($_POST["xaccept"]),addslashes($_POST["xaccept_description"]),addslashes($_POST["xaccept_description_es"]),addslashes($_POST["xaccept_description_en"]),intval($_POST["taquilla_tancada"]),intval($_POST["portada_btiquets"]),addslashes($_POST["productes"]),intval($_POST["enviament_id"]),intval($_POST["pagament"]),addslashes($_POST["enviament_str"]));
+                $ret = InsertBox($mysqli,intval($_POST["id"]),addslashes($_POST["name"]),addslashes($_POST["description"]),addslashes($_POST["details"]),addslashes($_POST["use"]),addslashes($_POST["price"]),addslashes($_POST["type"]),addslashes($_POST["quotes"]),addslashes($_POST["img"]),intval($_POST["activities"]),intval($_POST["n_min"]),intval($_POST["n_max"]),floatval($_POST["lat"]),floatval($_POST["destacat"]),intval($_POST["etype"]),$date_str,intval($_POST["etotal"]),intval($_POST["cellers"]),intval($_POST["patrimoni"]),intval($_POST["visites"]),intval($_POST["rutes"]),intval($_POST["destacat"]),intval($_POST["nou"]),intval($_POST["ocult"]),intval($_POST["no_online"]),addslashes($_POST["special_img"]),addslashes($_POST["qr_img"]),intval($_POST["edit_esceller"]),floatval($_POST["min_price"]),addslashes($_POST["name_es"]),addslashes($_POST["description_es"]),addslashes($_POST["details_es"]),addslashes($_POST["use_es"]),addslashes($_POST["quotes_es"]),addslashes($_POST["price_es"]),addslashes($_POST["name_en"]),addslashes($_POST["description_en"]),addslashes($_POST["details_en"]),addslashes($_POST["use_en"]),addslashes($_POST["quotes_en"]),addslashes($_POST["price_en"]),addslashes($_POST["ppt"]),addslashes($_POST["collaboradors"]),addslashes($_POST["sessions"]),addslashes($_POST["res_days"]),intval($_POST["close_time"]),intval($_POST["propietari"]),addslashes($_POST["sessio_unica"]),-1,addslashes($_POST["col_mail"]),intval($_POST["com_obl"]),addslashes($_POST["com_aux"]),-1,addslashes($_POST["recordatori"]),addslashes($_POST["recordatori_es"]),addslashes($_POST["recordatori_en"]),intval($_POST["xaccept"]),addslashes($_POST["xaccept_description"]),addslashes($_POST["xaccept_description_es"]),addslashes($_POST["xaccept_description_en"]),intval($_POST["taquilla_tancada"]),intval($_POST["portada_btiquets"]),addslashes($_POST["productes"]),intval($_POST["enviament_id"]),intval($_POST["pagament"]),addslashes($_POST["enviament_str"]),intval($_POST["codi_descompte"]));
                 break;
 
             case 'delete_box':  // btiquets opt
@@ -443,6 +444,24 @@
                 //$ret = CopyGuia($mysqli,intval($_POST["id"]));
                 break;
 
+            case 'edit_descompte':    
+                $mydata = array();            
+                $mydata['name']=addslashes($_POST["nom"]);
+                $mydata['codi']=addslashes($_POST["codi"]);
+                $mydata['type']=intval($_POST["type"]);
+                $mydata['valor']=floatval($_POST["valor"]);
+                $mydata['propietari']=intval($_POST["propietari"]);
+                $ret = InsertDBData("descomptes",$mydata,$_POST["id"]);
+                break;
+
+            case 'delete_descompte':
+                $ret = DelDBData("descomptes",intval($_POST["id"]));
+                break;
+            
+            case 'copy_descompte':
+                //$ret = CopyDescompte($mysqli,intval($_POST["id"]));
+                break;
+
             case 'edit_preu':    
                 $mydata = array();            
                 $mydata['nom']=addslashes($_POST["nom"]);
@@ -604,6 +623,10 @@
 
             case 'validar_reserva': 
                 $ret = ValidateReservation($mysqli,$_POST["id"],$_POST["val"],addslashes($_POST["com"]));
+                break;
+
+            case 'check_descompte': 
+                $ret = CheckDescompte($_POST["id"],$_POST["codi"]);
                 break;
             
             default:

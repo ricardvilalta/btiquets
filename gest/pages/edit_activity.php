@@ -6,7 +6,7 @@
 
     if($id>0)
     {   
-        $sql="SELECT name,description,price,event_type,res_days,close_time,sessio_unica,ocult,url,propietari,mail_aux,name_es,description_es,name_en,description_en,price_es,price_en,com_obl,com_aux,collaboradors,recordatori,recordatori_es,recordatori_en,xaccept,xaccept_description,xaccept_description_es,xaccept_description_en,taquilla_tancada,portada_btiquets,productes,enviament_id,pagament,enviament_str FROM box_data WHERE id='$id'";
+        $sql="SELECT name,description,price,event_type,res_days,close_time,sessio_unica,ocult,url,propietari,mail_aux,name_es,description_es,name_en,description_en,price_es,price_en,com_obl,com_aux,collaboradors,recordatori,recordatori_es,recordatori_en,xaccept,xaccept_description,xaccept_description_es,xaccept_description_en,taquilla_tancada,portada_btiquets,productes,enviament_id,pagament,enviament_str,codi_descompte FROM box_data WHERE id='$id'";
         
         $res = $mysqli->query($sql);
         $row = $res->fetch_row();
@@ -46,6 +46,7 @@
         $enviament_id = intval($row[30]);
         $pagament = intval($row[31]);
         $enviament_str = stripslashes($row[32]);
+        $codi_descompte = intval($row[33]);
         
         $price_str_original = $price_str;
         $price_es_str_original = $price_es_str;
@@ -160,6 +161,7 @@
         $enviament_id = -1;
         $pagament = 1;
         $enviament_str = "";
+        $codi_descompte = -1;
         
         $sessio_unica = array('id'=>-1,'data'=>"",'places'=>20,'estat'=>-1,'antelacio'=>24,'session_name'=>"");
     }
@@ -178,15 +180,23 @@
         if($propietari!=-1)
         {
             $compte = GetAccountInfo($mysqli,$propietari);
+            
         }
         else
         {
-            $compte = GetAccountfromUserInfo($mysqli,$_SESSION['user_id']);
+            $compte = GetAccountfromUserInfo($mysqli,$_SESSION['user_id']);            
+        }
+
+        if ($accountuid > 0) {
+            $descomptes = GetDBData("descomptes", "propietari=" . $compte['id'], "name");
+        } else {
+            $descomptes = GetDBData("descomptes", "", "name");
         }
     }
     else
     {
         $compte = GetAccountfromUserInfo($mysqli,$_SESSION['user_id']);
+        $descomptes = GetDBData("descomptes", "propietari=" . $compte['id'], "name");
     }    
     $uactivities = GetActivitiesfromUser($mysqli,$compte['id']);
     $disp_0 = $compte['btype_0']-$uactivities['btype_0']>0 ? $compte['btype_0']-$uactivities['btype_0'] : 0;
@@ -1135,6 +1145,7 @@
                         taquilla_tancada:$('#edit_taquilla_tancada').prop('checked')?1:0,
                         portada_btiquets:$('#edit_portada_btiquets').prop('checked')?1:0,
                         pagament: pagament_value,
+                        codi_descompte: $('#codi_descompte').val(),
                     },
                 }).success(function(ret)
                 {
@@ -1390,6 +1401,20 @@
                             </div>
                             <div class="form-group">
                                 <button id="new_mod" class="btn btn-primary">Afegir modalitat</button>
+                            </div>
+                        </div>
+                        <div id="payment_mod">
+                            <h2>Codis de descompte</h2>
+                            <div class="form-group">
+                                <select id="codi_descompte" class="form-control">
+                                    <option value="0" <?php if($codi_descompte==-1) echo 'selected="selected"'; ?>>Sense codi de descompte</option>
+                                    <?php
+                                    foreach($descomptes as $descompte)
+                                    {?>
+                                    <option value='<?php echo $descompte[0]; ?>' <?php if($codi_descompte==$descompte[0]) echo 'selected="selected"'; ?>><?php echo $descompte[1]; ?></option>
+                                    <?php 
+                                    }?>
+                                </select>
                             </div>
                         </div>
                         <div id="event_type_0">

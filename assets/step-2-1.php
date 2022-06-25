@@ -41,12 +41,47 @@
                 Recalcular(); 
             }
         });
+
+        $('#aplicar_codi').click(function(){
+            if($("#codi_descompte").val()!="") {
+                $.ajax({  
+                    type: "POST",  
+                    url: "<?php echo $rootfolder; ?>" + "php/server_actions.php",  
+                    data: {
+                        op:"check_descompte",
+                        id:$('#cd_id').val(),
+                        codi:$("#codi_descompte").val()
+                    },             
+                    dataType: 'json'
+                }).always(function(res)
+                {
+                    var descompte = 0;
+                    var tdescompte = -1;
+                    if(res!=null) {                        
+                        descompte = parseFloat(res.descompte);
+                        tdescompte = parseInt(res.type);
+                        if(tdescompte==-1) {
+                            $('#cd_missatge').html('Descompte no vàlid');
+                            Recalcular();
+                        }
+                        else {
+                            $('#cd_missatge').html('Descompte vàlid');
+                            Recalcular(descompte,tdescompte);
+                        }
+                    }
+                    else {
+                        $('#cd_missatge').html('No s\'ha trobat el descompte');
+                        Recalcular();   
+                    }
+                }); 
+            }            
+        });
         
         $('.mod_list').hide();
         
     });
     
-    function Recalcular()
+    function Recalcular(descompte=0,tdescompte=-1)
     {
         var total = 0;
         var html = "";
@@ -76,6 +111,14 @@
             quant_str += n_elements;
             quant_str += ";";
         });
+
+        if(tdescompte==0){
+            if(total-descompte > 0) total-=descompte;
+            else total=0;
+        }
+        if(tdescompte==1){
+            total=total*(1-descompte/100);
+        }
 
         $('#preu-total').html(total.toFixed(2)  + '€');
         
@@ -148,6 +191,23 @@
             </tr>        
         <?php
         }
+
+        if($box['codi_descompte']>0) {?>
+            <tr class="" mid='-1'>
+                <td class="9u" colspan="2">
+                    <div class="12u$(xsmall)">Tens un codi de descompte? <a style="cursor:pointer" id="aplicar_codi">Aplicar</a><br>
+                    <div class="cd_notificacio" id="cd_missatge"></div>
+                </div>
+                </td>
+                <td class="3u">
+                    <div class="12u$(xsmall)">
+                        <input type="text" name="codi_descompte" id="codi_descompte"/>
+                    </div>
+                </td>
+            </tr>
+        <?php
+        }
+
         ?>
                 </tbody>
                 <tfoot>

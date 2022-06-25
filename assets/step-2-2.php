@@ -62,7 +62,8 @@
         <div>
             <div class="row uniform">
                 <input type=hidden id="box_id" value="<?php echo $event; ?>"/>
-                <input type=hidden id="data_res" value=""/>                
+                <input type=hidden id="data_res" value=""/>
+                <input type=hidden id="cd_id" value="<?php echo $box["codi_descompte"]; ?>"/>              
                 <input type=hidden id="quant" value=""/>
                 <div class="12u$"><input type="text" name="name" id="name" placeholder="<?php echo translate("Nom", $lang); ?>" /></div>
                 <div class="12u$"><input type="email" name="email" id="email" placeholder="<?php echo translate("Email", $lang); ?>" /></div>                

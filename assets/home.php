@@ -10,17 +10,7 @@
 </script>
 
 <div class="container">
-    <?php
-    if(count($imglist)==0)
-    {?>
-    <span class="image fit primary"></span>
-    <?php
-    }
-    else
-    {?>
     <span class="image fit primary"><img src="<?php echo $rootfolder . "boxes/box_" . $event . "/box_image_1.jpg"; ?>" alt="" /></span>
-    <?php
-    }?>
     <a href="#header" class="goto-prev scrolly">Prev</a>
     <div class="content">
         <header class="major">

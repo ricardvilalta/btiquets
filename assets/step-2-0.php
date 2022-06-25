@@ -89,7 +89,8 @@
                                     check_1: b_check_1,
                                     check_2: b_check_2,
                                     check_3: b_check_3,
-                                    check_special: b_check_special
+                                    check_special: b_check_special,
+                                    codi_descompte: $('#codi_descompte').val()
                                 }
                             }).done(function(ret)
                             {                    
@@ -135,6 +136,12 @@
                                     if(ret==-2)
                                     {
                                         if(confirm('<?php echo translate("Ja no queden les places sol·licitades. Sisplau, accepta per actualitzar la pàgina", $lang); ?>'))
+                                        {
+                                            location.reload(); 
+                                        }
+                                    }
+                                    else {
+                                        if(confirm('<?php echo translate("Hi ha hagut un error en la creació de la reserva. Sisplau, accepta per actualitzar la pàgina", $lang); ?>'))
                                         {
                                             location.reload(); 
                                         }
@@ -196,7 +203,8 @@
         <div>
             <div class="row uniform">
                 <input type=hidden id="box_id" value="<?php echo $event; ?>"/>
-                <input type=hidden id="data_res" value="<?php echo $box["sessio_unica"]; ?>"/>                
+                <input type=hidden id="data_res" value="<?php echo $box["sessio_unica"]; ?>"/>
+                <input type=hidden id="cd_id" value="<?php echo $box["codi_descompte"]; ?>"/>
                 <input type=hidden id="quant" value=""/>
                 <div class="3u">
                     <label class="formulari">Gènere</label>

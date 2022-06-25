@@ -2616,6 +2616,7 @@ table.style1 tbody tr:nth-child(2n + 1) {
 
 table td {
 	padding: 0.75em 0.75em;
+	vertical-align: middle;
 }
 
 table th {
@@ -3130,6 +3131,11 @@ button:disabled,
 
 #eventsession {
 	text-align: left;
+}
+
+.cd_notificacio {
+	font-size: medium;
+	color: #8cd1a8;
 }
 
 

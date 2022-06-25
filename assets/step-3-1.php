@@ -39,7 +39,8 @@
                                     tel: $('#tel').val(),
                                     com: $('#comment').val(),
                                     newsletter: $('#newsletter').is(":checked")?1:0,
-                                    lang: '<?php echo $lang; ?>'
+                                    lang: '<?php echo $lang; ?>',
+                                    codi_descompte: $('#codi_descompte').val()
                                 }
                             }).done(function(ret)
                             {                    
@@ -90,6 +91,12 @@
                                             location.reload(); 
                                         }
                                     }
+                                    else {
+                                        if(confirm('<?php echo translate("Hi ha hagut un error en la creació de la reserva. Sisplau, accepta per actualitzar la pàgina", $lang); ?>'))
+                                        {
+                                            location.reload(); 
+                                        }
+                                    }
                                 }
                             });
                         }
@@ -132,7 +139,8 @@
         <div>
             <div class="row uniform">
                 <input type=hidden id="box_id" value="<?php echo $event; ?>"/>
-                <input type=hidden id="data_res" value=""/>                
+                <input type=hidden id="data_res" value=""/>     
+                <input type=hidden id="cd_id" value="<?php echo $box["codi_descompte"]; ?>"/>           
                 <input type=hidden id="quant" value=""/>
                 <div class="12u$">
                     <label class="formulari"><?php echo translate("Nom", $lang); ?></label>
@@ -159,7 +167,7 @@
                 
                 <div class="12u$">
                     <ul class="actions">
-                        <li><a id="action-1" class="button special icon fa-hand-pointer-o"><?php echo translate("Confirmarrrr", $lang); ?></a></li>
+                        <li><a id="action-1" class="button special icon fa-hand-pointer-o"><?php echo translate("Confirmar", $lang); ?></a></li>
                     </ul>
                 </div>
             </div>

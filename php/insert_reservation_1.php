@@ -35,6 +35,9 @@
         if($box_id>0)
         {
             $box = GetBox($mysqli,$box_id);
+            if($box['codi_descompte']>0) {
+                $descompte = CheckDescompte($box['codi_descompte'],$_POST["codi_descompte"]);
+            }
             
             
             if($box['etype']==7)
@@ -77,8 +80,16 @@
                 }
 
                 if($no_solidari){
-                    $total-=$qtotal;
+                    $total=$total-$qtotal;
                     if($total<0)$total=0;
+                }
+
+                if($descompte['type']==0){
+                    if($total-$descompte['descompte'] > 0) $total=$total-$descompte['descompte'];
+                    else $total=0;
+                }
+                else if($descompte['type']==1){
+                    $total=number_format($total*(1-$descompte['descompte']/100),2,',','.');
                 }
             }
             
@@ -289,6 +300,10 @@
                     $return = $html;       
                 }
             }
+            else {
+                echo -1;
+            }
+
 
             echo $return;
         }

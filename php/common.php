@@ -32,6 +32,7 @@
     $tipuspagament = array(-1 => "Indeterminat", 0 => "Transferència", 1 => "TPV", 2 => "Efectiu", 3 => "Xec", 4 => "Combinat");
     $tipusclient = array(-1 => "Indeterminat", 0 => "Escola", 1 => "Família", 2 => "Adults", 3 => "AAVV");
     $tipusactivitat = array(-1 => "Indeterminat", 0 => "Cultural", 1 => "Esport i salut", 2 => "Espiritual", 3 => "Promoció econòmica", 3 => "Fira i festes");
+    $tipusdescompte = array(0 => "Import", 1 => "Percentatge");
 
     const _TIPUSIVA = array(21,10,4,0);
     

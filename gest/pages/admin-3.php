@@ -2,7 +2,12 @@
     
     if($_SESSION['user_id']==$SUPERUSER)
     {
-        $boxlist = GetBoxListAdmin($mysqli,-1);
+        if ($accountuid > 0) {
+            $compte = GetAccountInfo($mysqli, $accountuid);
+            $boxlist = GetBoxListAdmin($mysqli,-1,$compte['id']);
+        } else {
+            $boxlist = GetBoxListAdmin($mysqli,-1);
+        }        
     }
     else
     {
