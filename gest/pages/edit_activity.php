@@ -6,7 +6,7 @@
 
     if($id>0)
     {   
-        $sql="SELECT name,description,price,event_type,res_days,close_time,sessio_unica,ocult,url,propietari,mail_aux,name_es,description_es,name_en,description_en,price_es,price_en,com_obl,com_aux,collaboradors,recordatori,recordatori_es,recordatori_en,xaccept,xaccept_description,xaccept_description_es,xaccept_description_en,taquilla_tancada,portada_btiquets,productes,enviament_id,pagament,enviament_str,codi_descompte FROM box_data WHERE id='$id'";
+        $sql="SELECT name,description,price,event_type,res_days,close_time,sessio_unica,ocult,url,propietari,mail_aux,name_es,description_es,name_en,description_en,price_es,price_en,com_obl,com_aux,collaboradors,recordatori,recordatori_es,recordatori_en,xaccept,xaccept_description,xaccept_description_es,xaccept_description_en,taquilla_tancada,portada_btiquets,productes,enviament_id,pagament,enviament_str,codi_descompte,productes_relacionats FROM box_data WHERE id='$id'";
         
         $res = $mysqli->query($sql);
         $row = $res->fetch_row();
@@ -47,6 +47,7 @@
         $pagament = intval($row[31]);
         $enviament_str = stripslashes($row[32]);
         $codi_descompte = intval($row[33]);
+        $productes_relacionats = explode(';',$row[34]);
         
         $price_str_original = $price_str;
         $price_es_str_original = $price_es_str;
@@ -162,6 +163,7 @@
         $pagament = 1;
         $enviament_str = "";
         $codi_descompte = -1;
+        $productes_relacionats = array();
         
         $sessio_unica = array('id'=>-1,'data'=>"",'places'=>20,'estat'=>-1,'antelacio'=>24,'session_name'=>"");
     }
@@ -211,6 +213,12 @@
     $uallotjaments = GetAllotjamentsfromUser($mysqli,$compte['id']);
     $uproductes = GetProductesfromUser($mysqli,$compte['id']);
     $uenviaments = GetEnviamentsfromUser($mysqli,$compte['id']);
+
+    if ($_SESSION['user_id'] == $SUPERUSER) {
+        $activitats = GetBoxListAdmin($mysqli, -1, -1);
+    } else {
+        $activitats = GetBoxListAdmin($mysqli, -1, $compte['id']);
+    }
 ?>
 
 <script type="text/javascript">
@@ -1089,6 +1097,12 @@
                         enviament_str += $(this).find('input').val();
                     }
                 });
+
+                var prel_str = "";
+                $("#p_rel :selected").each(function() {
+                    prel_str+=this.value;
+                    prel_str+=';';
+                });
                 
                 <?php
                 if($_SESSION['user_id']==$SUPERUSER)
@@ -1146,6 +1160,7 @@
                         portada_btiquets:$('#edit_portada_btiquets').prop('checked')?1:0,
                         pagament: pagament_value,
                         codi_descompte: $('#codi_descompte').val(),
+                        productes_relacionats: prel_str,
                     },
                 }).success(function(ret)
                 {
@@ -1322,6 +1337,18 @@
                                 <p class="help-block">castellano</p>
                                 <textarea id="edit_xaccept_en" class="form-control" rows="3"><?php echo $xaccept_description_en; ?></textarea>
                                 <p class="help-block">english</p>
+                            </div>
+                            <div class="form-group">
+                                <label>Activitats relacionades</label>
+                                <select id="p_rel" class="form-control" name="p_rel" multiple>
+                                    <?php
+                                    foreach ($activitats as $activitat) {
+                                    ?>
+                                        <option value="<?php echo $activitat['id']; ?>" <?php if (in_array($activitat['id'],$productes_relacionats)) echo 'selected'; ?>><?php echo $activitat['name']; ?></option>
+                                    <?php
+                                    }
+                                    ?>
+                                </select>
                             </div>
                         </div>
                         <div class="form-group" style="display: flex;">    

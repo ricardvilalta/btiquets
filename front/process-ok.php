@@ -1,4 +1,30 @@
+<!doctype html>
+<html lang="ca">
+    
 <?php
+    
+    include_once './../php/common.php';
+    include_once './../php/funcions.php';
+    include_once './../php/btdv_funcions.php';
+
+    global $mysqli;
+    global $lang;
+    global $zone;
+
+
+    if(isset($_GET['reserva']))
+    {
+        $reserva = $_GET['reserva'];
+    }
+
+    if(isset($_GET['event']))
+    {
+        $event_url = $_GET['event'];
+    }
+
+
+    $tipus = array(0=>'Esdeveniment amb data única',1=>'Esdeveniment amb múltiples sessions',2=>'Reserva de restaurant',3=>'Allotjaments',4=>'Venda de productes simple',5=>'Venda de productes avançada');
+    $tipus_icons = array(0=>'lni-ticket',1=>'lni-calendar',2=>'lni-restaurant',3=>'lni-home',4=>'lni-tshirt',5=>'lni-cart'); 
 
     $info_reserva = GetReservation_by_ref($mysqli,$reserva);
     if($info_reserva!=null)
@@ -64,26 +90,51 @@
         $reshotelinfo = GetHotelReservation($mysqli,$info_reserva['quantitat']);
     }
 
-//    if($time_session=="00:00")
-//    {
-//        $data_2 = $date_session . " MIGDIA";
-//    }
-//    else
-//    {
-//        $data_2 = $date_session . " NIT";
-//    }
+    include 'header.php';
 ?>
 
-<header>
-    <div class="header_background">
-        
+<body>
+   
+    <!--====== PRELOADER PART START ======-->
+    
+    <div class="preloader">
+        <div class="spin">
+            <div class="cube1"></div>
+            <div class="cube2"></div>
+        </div>
+    </div>
+    
+    <!--====== PRELOADER PART START ======-->
+    
+    <!--====== HEADER PART START ======-->
+    
+    <header class="header-area">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <nav class="navbar navbar-expand-lg">
+                        <a class="navbar-brand portada" href="/">
+                            <img src="/front/assets/images/logo.png" alt="Logo">
+                        </a> <!-- Logo -->                        
+                    </nav> <!-- navbar -->
+                </div>
+            </div> <!-- row -->
+        </div> <!-- container -->
+    </header>
+    
+    <!--====== HEADER PART ENDS ======-->
+    
+    <section class="pt-130 pb-10">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
         <?php
         if($box["etype"]==2)
         {?>
-        <h1><?php echo translate("Sol·litud de reserva correcta",$lang); ?></h1>        
-        <h4><?php echo translate("La sol·licitud s'ha realitzat correctament. Aquí tens les dades de la sol·licitud:",$lang); ?></h4>
+        <h2 class="mb-3"><?php echo translate("Sol·litud de reserva correcta",$lang); ?></h2>        
+        <h4 class="mb-3"><?php echo translate("La sol·licitud s'ha realitzat correctament.<br>Aquí tens les dades de la sol·licitud:",$lang); ?></h4>
         <div><?php echo translate("Recorda que la reserva no és vàlida fins que no rebis la corresponent confirmació de l'establiment. Si no rebeu la confirmació en les properes 2 hores, heu de considerar la reserva no atesa i, per tant, no vàlida",$lang); ?></div>
-        <div style="margin-top:2em;margin-bottom:2em;font-weight: bold;color: #FFFFFF;" class="content">
+        <div class="rdades mt-5 font-weight-bold">
             <div><?php echo $box['name']; ?></div>
             <div><?php echo translate("Referència",$lang) . ": " . strtoupper($info_reserva['ref']); ?></div>
             <div><?php echo translate("Data",$lang) . ": " . $data_2; ?></div>
@@ -94,10 +145,10 @@
         }
         else if($box["etype"]==3)
         {?>
-        <h1><?php echo translate("Sol·litud de reserva correcta",$lang); ?></h1>        
-        <h4><?php echo translate("La sol·licitud s'ha realitzat correctament. Aquí tens les dades de la sol·licitud:",$lang); ?></h4>
+        <h2 class="mb-3"><?php echo translate("Sol·litud de reserva correcta",$lang); ?></h2>
+        <h4 class="mb-3"><?php echo translate("La sol·licitud s'ha realitzat correctament.<br> Aquí tens les dades de la sol·licitud:",$lang); ?></h4>
         <div><?php echo translate("Recorda que la reserva no és vàlida fins que no rebis la corresponent confirmació de l'establiment. Si no rebeu la confirmació en les properes 2 hores, heu de considerar la reserva no atesa i, per tant, no vàlida",$lang); ?></div>
-        <div style="margin-top:2em;margin-bottom:2em;font-weight: bold;color: #FFFFFF;" class="content">
+        <div class="rdades mt-5 font-weight-bold">
             <div><?php echo $box['name']; ?></div>
             <div><?php echo translate("Reserva",$lang) . ": " . $reshotelinfo['name'] . " - " . $reshotelinfo['modalitat']; ?></div>
             <div><?php echo translate("Referència",$lang) . ": " . strtoupper($info_reserva['ref']); ?></div>
@@ -110,10 +161,10 @@
         }
         else if($box["etype"]==4 || $box["etype"]==5 || $box["etype"]==7)
         {?>
-        <h1><?php echo translate("Compra correcta",$lang); ?></h1>        
-        <h4><?php echo translate("La compra s'ha realitzat correctament. Aquí tens les dades de la compra:",$lang); ?></h4>
+        <h2 class="mb-3"><?php echo translate("Compra correcta",$lang); ?></h2>        
+        <h4 class="mb-3"><?php echo translate("La compra s'ha realitzat correctament.<br> Aquí tens les dades de la compra:",$lang); ?></h4>
         <div><?php echo translate("S'ha enviat un correu de confirmació a la teva adreça. Si no el reps, no pateixis, apunta la referència que et servirà d'identificador de la compra",$lang); ?></div>
-        <div style="margin-top:2em;margin-bottom:2em;font-weight: bold;color: #FFFFFF;" class="content">
+        <div class="rdades mt-5 font-weight-bold">
             <div><?php echo $box['name']; ?></div>
             <div><?php echo translate("Referència",$lang) . ": " . strtoupper($info_reserva['ref']); ?></div>
             <div><?php echo $tiquets_reservats; ?></div>
@@ -127,14 +178,14 @@
         }
         else
         {?>
-        <h1><?php echo translate("Reserva correcta",$lang); ?></h1>        
-        <h4><?php echo translate("La reserva s'ha realitzat correctament. Aquí tens les dades de la reserva:",$lang); ?></h4>
+        <h2 class="mb-3"><?php echo translate("Reserva correcta",$lang); ?></h2>
+        <h4 class="mb-3"><?php echo translate("La reserva s'ha realitzat correctament.<br> Aquí tens les dades de la reserva:",$lang); ?></h4>
         <?php if($box['id']==502 || $box['id']==510 || $box['id']==511) {// TRANSÈQUIA 2022 ?>
         <div><?php echo translate("S'ha enviat un correu de confirmació a la teva adreça. Si no el reps, comprova el correu brossa o sol·licita'ns que us la reenviem indicant de nou el vostre correu electrònic. En qualsevol cas, anoteu la referència de la reserva.",$lang); ?></div>
         <?php } else {?>
         <div><?php echo translate("S'ha enviat un correu de confirmació a la teva adreça. Si no el reps, no pateixis, apunta la referència que et servirà d'identificador el dia que realitzis l'activitat",$lang); ?></div>
         <?php }?>
-        <div style="margin-top:2em;margin-bottom:2em;font-weight: bold;color: #FFFFFF;" class="content">
+        <div class="rdades mt-5 font-weight-bold">
             <div><?php echo $box['name']; ?></div>
             <div><?php echo translate("Referència",$lang) . ": " . strtoupper($info_reserva['ref']); ?></div>
             <?php
@@ -155,32 +206,55 @@
         <ul class="actions">
             <li><a href='<?php echo $server . 'event/' . $event_url; ?>' class="button special scrolly"><?php if($box["etype"]==4 || $box["etype"]==5) echo translate("Fer una nova compra", $lang); else echo translate("Fer una nova reserva", $lang); ?></a></li>
         </ul>
-        <section id="product-A" class="product-area pt-150 pb-10">
-            <div class="container">
-                <h3>ACTIVITATS RELACIONADES</h3>
-                <div class="row">
-                    <div class="col-12">
-                        <div class="mt-30">
-                            <div class="row">
-                            <?php
-                            $first = true;
-                            $box_list = GetBoxList(-1);
-                            foreach($box_list as $box)
-                            {
-                                $compte = GetAccountInfo($mysqli,$box['propietari']);?> 
+        <?php
+        if($box['id']==348 || $box['id']==358 || $box['id']==359 || $box['id']==360 || $box['id']==361 || $box['id']==362 || $box['id']==363)
+        {
+            $url = $server . 'event/' . $event_url;
+        ?>
+        <ul class="actions mt-5">
+            <li><button type="button" class="btn btn-outline btn-primary"><a href='<?php echo "https://www.facebook.com/sharer/sharer.php?u=".$url; ?>' target="_blank"><?php echo translate("Comparteix-ho a Facebook", $lang); ?></a></button></li>
+            <li><button type="button" class="btn btn-outline btn-info"><a href='<?php echo "https://twitter.com/intent/tweet?url=".$url."&text=Jo%20ja%20he%20fet%20la%20meva%20aportaci%C3%B3%20a%20la%20TRANSÉQUIA%202021"; ?>' target="_blank"><?php echo translate("Comparteix-ho a Twitter", $lang); ?></a></button></li>
+        </ul>
+        <?php
+        }?>
+                </div>
+            </div>
+        </div>
+    </section>
+   
+    <!--====== PRODUCT PART START ======-->
+    
+    <!--====== ACTIVITATS ======-->
+    <?php
+    $productes_relacionats = explode(';',$box['productes_relacionats']);
+    if(sizeof($productes_relacionats)>0) {?>    
+    <section id="product-A" class="product-area pt-80 pb-10">
+        <div class="container">
+            <h3>També et podria interessar</h3>
+            <div class="row">
+                <div class="col-12">
+                    <div class="mt-30">
+                        <div class="row">
+                        <?php
+                        $first = true;
+                        foreach($productes_relacionats as $pid)
+                        {
+                            if(intval($pid)>0){
+                                $boxiter = GetBox($mysqli,$pid);
+                                $compte = GetAccountInfo($mysqli,$boxiter['propietari']);?> 
                                 <div class="col-6 col-md-4 col-lg-3 mb-30">
                                     <div class="single-product-items myproduct">
                                         <div class="product-item-image">
                                             <?php
                                             if(true)
                                             {?>
-                                            <a href='<?php echo "/event/" . $box['url']; ?>' target="_blank">
+                                            <a href='<?php echo "/event/" . $boxiter['url']; ?>' target="_blank">
                                                 <div class="image_frame pt-4 px-2">
-                                                    <h4 class=""><?php echo $box['name']; ?></h4>
+                                                    <h4 class=""><?php echo $boxiter['name']; ?></h4>
                                                     <h5 class=""><?php echo $compte['nom']; ?></h5>
                                                 </div>
-                                                <!-- <img src='<?php echo "/boxes/box_" . $box["id"] . "/box_image_0_medium.jpg"; ?>' alt="<?php echo $box['name']; ?>"> -->
-                                                <img src='<?php echo "/boxes/box_" . $box["id"] . "/box_image_0.jpg"; ?>' alt="<?php echo $box['name']; ?>">
+                                                <!-- <img src='<?php echo "/boxes/box_" . $boxiter["id"] . "/box_image_0_medium.jpg"; ?>' alt="<?php echo $boxiter['name']; ?>"> -->
+                                                <img src='<?php echo "/boxes/box_" . $boxiter["id"] . "/box_image_0.jpg"; ?>' alt="<?php echo $boxiter['name']; ?>">
                                             </a>
                                             <?php
                                             }
@@ -198,38 +272,36 @@
                                                     <a href="#"><img src='<?php echo "/boxes/logo_image_" . $compte['id'] . ".png"; ?>' alt="compte"></a>
                                                 </div>
                                                 <div class="product-icon">
-                                                    <a href="#"><i class="<?php echo $tipus_icons[$box['etype']]; ?>"></i></a>
-                                                    <a href='<?php echo "/event/" . $box['url']; ?>' target="_blank"><i class="lni-share"></i></a>
+                                                    <a href="#"><i class="<?php echo $tipus_icons[$boxiter['etype']]; ?>"></i></a>
+                                                    <a href='<?php echo "/event/" . $boxiter['url']; ?>' target="_blank"><i class="lni-share"></i></a>
                                                 </div>
                                             </div>
-    <!--                                            <p class="product-rating"><?php echo $tipus[$box['etype']]; ?></p>-->
+    <!--                                            <p class="product-rating"><?php echo $tipus[$boxiter['etype']]; ?></p>-->
                                         </div>
                                     </div> <!-- single product items -->
                                 </div>
-                            <?php
+                        <?php
                             }
+                        }
 
-                            $first = false;
-                            ?>
-                            </div> <!-- row -->
-                        </div> <!-- product items -->
+                        $first = false;
+                        ?>
+                        </div> <!-- row -->
+                    </div> <!-- product items -->
 
-                    </div>
-                </div> <!-- row -->
-            </div> <!-- container -->
-        </section>
-        <?php
-        if($box['id']==348 || $box['id']==358 || $box['id']==359 || $box['id']==360 || $box['id']==361 || $box['id']==362 || $box['id']==363)
-        {
-            $url = $server . 'event/' . $event_url;
-        ?>
-        <ul class="actions">
-            <li><button type="button" class="btn btn-outline btn-primary"><a href='<?php echo "https://www.facebook.com/sharer/sharer.php?u=".$url; ?>' target="_blank"><?php echo translate("Comparteix-ho a Facebook", $lang); ?></a></button></li>
-            <li><button type="button" class="btn btn-outline btn-info"><a href='<?php echo "https://twitter.com/intent/tweet?url=".$url."&text=Jo%20ja%20he%20fet%20la%20meva%20aportaci%C3%B3%20a%20la%20TRANSÉQUIA%202021"; ?>' target="_blank"><?php echo translate("Comparteix-ho a Twitter", $lang); ?></a></button></li>
-        </ul>
-        <?php
-        }?>
-        
-        
-    </div>
-</header>
+                </div>
+            </div> <!-- row -->
+        </div> <!-- container -->
+    </section>
+    <?php
+    }
+    ?>
+  
+    
+    <?php
+    include 'footer.php';
+    ?>
+
+</body>
+
+</html>

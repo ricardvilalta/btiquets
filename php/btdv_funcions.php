@@ -980,34 +980,41 @@ function DelSpecificDBData($DBName, $DBField, $DBValue, $DBField_not = "", $DBVa
     function GetHotelReservation($mysqli,$code)
     {
         global $lang;
+        $data = null;
         
         $aux = explode('_',$code);
-        $hid = $aux[0];
-        $rid = $aux[1];        
+        if($aux && sizeof($aux)>=2) {
+            $hid = $aux[0];
+            $rid = $aux[1];        
 
-        switch($lang)
-        {
-            case 'es':
-                $sql="SELECT id,name_es,poblacio,type,modalitat_es FROM allotjaments WHERE ocult=0 AND id='$hid'";
-                break;
+            switch($lang)
+            {
+                case 'es':
+                    $sql="SELECT id,name_es,poblacio,type,modalitat_es FROM allotjaments WHERE ocult=0 AND id='$hid'";
+                    break;
 
-            case 'en':
-                $sql="SELECT id,name_en,poblacio,type,modalitat_es FROM allotjaments WHERE ocult=0 AND id='$hid'";
-                break;
+                case 'en':
+                    $sql="SELECT id,name_en,poblacio,type,modalitat_es FROM allotjaments WHERE ocult=0 AND id='$hid'";
+                    break;
 
-            default:
-                $sql="SELECT id,name,poblacio,type,modalitat FROM allotjaments WHERE ocult=0 AND id='$hid'";  
-                break;
-        }
-        
-        $result=$mysqli->query($sql);             
-        if($result)
-        {                   
-            $row = $result->fetch_row();
-            // decodifico l'string de capacitats i preu
-            $mod = null;
-            $mod = decode_cap($row[4],$rid);
-            $data = array('id'=>intval($row[0]),'name'=>$row[1],'poblacio'=>$row[2],'type'=>intval($row[3]),'modalitat'=>$mod[0]['nom']);
+                default:
+                    $sql="SELECT id,name,poblacio,type,modalitat FROM allotjaments WHERE ocult=0 AND id='$hid'";  
+                    break;
+            }
+            
+            $result=$mysqli->query($sql);             
+            if($result)
+            {                   
+                $row = $result->fetch_row();
+                // decodifico l'string de capacitats i preu
+                $mod = null;
+                if($row){
+                    $mod = decode_cap($row[4],$rid);
+                    if($mod!=null){
+                        $data = array('id'=>intval($row[0]),'name'=>$row[1],'poblacio'=>$row[2],'type'=>intval($row[3]),'modalitat'=>$mod[0]['nom']);
+                    }    
+                }
+            }
         }
         
         return $data;
@@ -1515,15 +1522,15 @@ function DelSpecificDBData($DBName, $DBField, $DBValue, $DBField_not = "", $DBVa
         switch($lang)
         {
             case 'es':
-                $sql="SELECT name_es,type,description_es,price_es,quotes_es,activities,details_es,reservation_es,n_min,n_max,lat,lng,url,event_type,data,n_total,cellers,patrimoni,visites,rutes,promo_quant,promo_id,no_online,special_img,extra_fields,img,collaboradors,qr_img,persons_per_ticket,res_days,close_time,propietari,sessio_unica,ocult,aavv,mail_aux,com_obl,com_aux,linksessions,recordatori_es,xaccept,xaccept_description_es,taquilla_tancada,productes,enviament_id,pagament,enviament_str,codi_descompte FROM box_data WHERE id=$id";
+                $sql="SELECT name_es,type,description_es,price_es,quotes_es,activities,details_es,reservation_es,n_min,n_max,lat,lng,url,event_type,data,n_total,cellers,patrimoni,visites,rutes,promo_quant,promo_id,no_online,special_img,extra_fields,img,collaboradors,qr_img,persons_per_ticket,res_days,close_time,propietari,sessio_unica,ocult,aavv,mail_aux,com_obl,com_aux,linksessions,recordatori_es,xaccept,xaccept_description_es,taquilla_tancada,productes,enviament_id,pagament,enviament_str,codi_descompte,productes_relacionats FROM box_data WHERE id=$id";
                 break;
             
             case 'en':
-                $sql="SELECT name_en,type,description_en,price_en,quotes_en,activities,details_en,reservation_en,n_min,n_max,lat,lng,url,event_type,data,n_total,cellers,patrimoni,visites,rutes,promo_quant,promo_id,no_online,special_img,extra_fields,img,collaboradors,qr_img,persons_per_ticket,res_days,close_time,propietari,sessio_unica,ocult,aavv,mail_aux,com_obl,com_aux,linksessions,recordatori_en,xaccept,xaccept_description_en,taquilla_tancada,productes,enviament_id,pagament,enviament_str,codi_descompte FROM box_data WHERE id=$id";
+                $sql="SELECT name_en,type,description_en,price_en,quotes_en,activities,details_en,reservation_en,n_min,n_max,lat,lng,url,event_type,data,n_total,cellers,patrimoni,visites,rutes,promo_quant,promo_id,no_online,special_img,extra_fields,img,collaboradors,qr_img,persons_per_ticket,res_days,close_time,propietari,sessio_unica,ocult,aavv,mail_aux,com_obl,com_aux,linksessions,recordatori_en,xaccept,xaccept_description_en,taquilla_tancada,productes,enviament_id,pagament,enviament_str,codi_descompte,productes_relacionats FROM box_data WHERE id=$id";
                 break;
             
             default:
-                $sql="SELECT name,type,description,price,quotes,activities,details,reservation,n_min,n_max,lat,lng,url,event_type,data,n_total,cellers,patrimoni,visites,rutes,promo_quant,promo_id,no_online,special_img,extra_fields,img,collaboradors,qr_img,persons_per_ticket,res_days,close_time,propietari,sessio_unica,ocult,aavv,mail_aux,com_obl,com_aux,linksessions,recordatori,xaccept,xaccept_description,taquilla_tancada,productes,enviament_id,pagament,enviament_str,codi_descompte FROM box_data WHERE id=$id";
+                $sql="SELECT name,type,description,price,quotes,activities,details,reservation,n_min,n_max,lat,lng,url,event_type,data,n_total,cellers,patrimoni,visites,rutes,promo_quant,promo_id,no_online,special_img,extra_fields,img,collaboradors,qr_img,persons_per_ticket,res_days,close_time,propietari,sessio_unica,ocult,aavv,mail_aux,com_obl,com_aux,linksessions,recordatori,xaccept,xaccept_description,taquilla_tancada,productes,enviament_id,pagament,enviament_str,codi_descompte,productes_relacionats FROM box_data WHERE id=$id";
                 break;
         }
         $result=$mysqli->query($sql);
@@ -1551,7 +1558,7 @@ function DelSpecificDBData($DBName, $DBField, $DBValue, $DBField_not = "", $DBVa
                     }
                 }
 
-                $box = array('id'=>$id,'name'=>$row[0],'type'=>$row[1],'description'=>html_entity_decode(nl2br(htmlspecialchars(stripslashes($row[2])))),'price'=>$row[3],'quotes'=>html_entity_decode(nl2br(htmlspecialchars(stripslashes($row[4])))),'activities'=>floatval($row[5]),'details'=>html_entity_decode(nl2br(htmlspecialchars(stripslashes($row[6])))),'use'=>html_entity_decode(nl2br(htmlspecialchars(stripslashes($row[7])))),'n_min'=>intval($row[8]),'n_max'=>intval($row[9]),'lat'=>floatval($row[10]),'lng'=>floatval($row[11]),'url'=>$row[12],'etype'=>intval($row[13]),'edate'=>stripslashes($row[14]),'etotal'=>intval($row[15]),'erestotal'=>$res_total,'cellers'=>$row[16],'patrimoni'=>$row[17],'visites'=>$row[18],'rutes'=>$row[19],'promo_quant'=>floatval($row[20]),'promo_id'=>intval($row[21]),'no_online'=>intval($row[22]),'special_img'=>$row[23],'extra_fields'=>intval($row[24]),'img'=>'boxes/box_'.$id.'/'.$row[25],'collaboradors'=>stripslashes($row[26]),'qr_img'=>$row[27],'persons_per_ticket'=>$row[28],'res_days'=>$row[29],'close_time'=>intval($row[30]),'propietari'=>intval($row[31]),'sessio_unica'=>intval($row[32]),'ocult'=>intval($row[33]),'aavv'=>intval($row[34]),'mail_aux'=>stripslashes($row[35]),'com_obl'=>intval($row[36]),'com_aux'=>stripslashes($row[37]),'linksessions'=>intval($row[38]),'recordatori'=>stripslashes($row[39]),'xaccept'=>intval($row[40]),'xaccept_description'=>stripslashes($row[41]),'taquilla_tancada'=>intval($row[42]),'productes'=>stripslashes($row[43]),'enviament_id'=>intval($row[44]),'pagament'=>intval($row[45]),'enviament_str'=>stripslashes($row[46]),'codi_descompte'=>intval($row[47]));
+                $box = array('id'=>$id,'name'=>$row[0],'type'=>$row[1],'description'=>html_entity_decode(nl2br(htmlspecialchars(stripslashes($row[2])))),'price'=>$row[3],'quotes'=>html_entity_decode(nl2br(htmlspecialchars(stripslashes($row[4])))),'activities'=>floatval($row[5]),'details'=>html_entity_decode(nl2br(htmlspecialchars(stripslashes($row[6])))),'use'=>html_entity_decode(nl2br(htmlspecialchars(stripslashes($row[7])))),'n_min'=>intval($row[8]),'n_max'=>intval($row[9]),'lat'=>floatval($row[10]),'lng'=>floatval($row[11]),'url'=>$row[12],'etype'=>intval($row[13]),'edate'=>stripslashes($row[14]),'etotal'=>intval($row[15]),'erestotal'=>$res_total,'cellers'=>$row[16],'patrimoni'=>$row[17],'visites'=>$row[18],'rutes'=>$row[19],'promo_quant'=>floatval($row[20]),'promo_id'=>intval($row[21]),'no_online'=>intval($row[22]),'special_img'=>$row[23],'extra_fields'=>intval($row[24]),'img'=>'boxes/box_'.$id.'/'.$row[25],'collaboradors'=>stripslashes($row[26]),'qr_img'=>$row[27],'persons_per_ticket'=>$row[28],'res_days'=>$row[29],'close_time'=>intval($row[30]),'propietari'=>intval($row[31]),'sessio_unica'=>intval($row[32]),'ocult'=>intval($row[33]),'aavv'=>intval($row[34]),'mail_aux'=>stripslashes($row[35]),'com_obl'=>intval($row[36]),'com_aux'=>stripslashes($row[37]),'linksessions'=>intval($row[38]),'recordatori'=>stripslashes($row[39]),'xaccept'=>intval($row[40]),'xaccept_description'=>stripslashes($row[41]),'taquilla_tancada'=>intval($row[42]),'productes'=>stripslashes($row[43]),'enviament_id'=>intval($row[44]),'pagament'=>intval($row[45]),'enviament_str'=>stripslashes($row[46]),'codi_descompte'=>intval($row[47]),'productes_relacionats'=>stripslashes($row[48]));
             }
         }
 
@@ -3265,7 +3272,7 @@ function DelSpecificDBData($DBName, $DBField, $DBValue, $DBField_not = "", $DBVa
         return $ret;
     }
 
-    function InsertBox($mysqli,$id,$name,$description,$details,$use,$price,$type,$quotes,$img,$activities,$n_min,$n_max,$lat,$lng,$etype,$edate,$etotal,$cellers,$patrimoni,$visites,$rutes,$destacat,$nou,$ocult,$no_online,$special_img,$qr_img,$extra_fields,$min_price,$name_es,$description_es,$details_es,$use_es,$quotes_es,$price_es,$name_en,$description_en,$details_en,$use_en,$quotes_en,$price_en,$ppt,$collaboradors,$sessions,$res_days="",$close_time=12,$propietari=0,$sessio_unica="",$aavv=false,$mail_aux="",$com_obl=false,$com_aux="",$linksessions=-1,$recordatori="",$recordatori_es="",$recordatori_en="",$xaccept=false,$xaccept_description="",$xaccept_description_es="",$xaccept_description_en="",$taquilla_tancada=false,$portada_btiquets=true,$productes="",$enviament_id=0,$pagament=1,$enviament_str="",$codi_descompte=-1)
+    function InsertBox($mysqli,$id,$name,$description,$details,$use,$price,$type,$quotes,$img,$activities,$n_min,$n_max,$lat,$lng,$etype,$edate,$etotal,$cellers,$patrimoni,$visites,$rutes,$destacat,$nou,$ocult,$no_online,$special_img,$qr_img,$extra_fields,$min_price,$name_es,$description_es,$details_es,$use_es,$quotes_es,$price_es,$name_en,$description_en,$details_en,$use_en,$quotes_en,$price_en,$ppt,$collaboradors,$sessions,$res_days="",$close_time=12,$propietari=0,$sessio_unica="",$aavv=false,$mail_aux="",$com_obl=false,$com_aux="",$linksessions=-1,$recordatori="",$recordatori_es="",$recordatori_en="",$xaccept=false,$xaccept_description="",$xaccept_description_es="",$xaccept_description_en="",$taquilla_tancada=false,$portada_btiquets=true,$productes="",$enviament_id=0,$pagament=1,$enviament_str="",$codi_descompte=-1,$productes_relacionats="")
     {
         global $lang;
         $ret=-1;
@@ -3288,11 +3295,11 @@ function DelSpecificDBData($DBName, $DBField, $DBValue, $DBField_not = "", $DBVa
         
         if($id==-1)
         {
-            $sql="INSERT INTO box_data(name,description,details,img,price,type,url,quotes,activities,reservation,n_min,n_max,lat,lng,event_type,data,n_total,cellers,patrimoni,visites,rutes,destacat,nou,ocult,no_online,special_img,qr_img,extra_fields,min_price,name_es,description_es,details_es,reservation_es,quotes_es,price_es,name_en,description_en,details_en,reservation_en,quotes_en,price_en,collaboradors,persons_per_ticket,propietari,res_days,close_time,aavv,mail_aux,com_obl,com_aux,linksessions,recordatori,recordatori_es,recordatori_en,xaccept,xaccept_description,xaccept_description_es,xaccept_description_en,taquilla_tancada,portada_btiquets,productes,enviament_id,pagament,enviament_str,codi_descompte) VALUES ('$name','$description','$details','$img','$price','$type','$url','$quotes','$activities','$use','$n_min','$n_max','$lat','$lng','$etype','$edate','$etotal','$cellers','$patrimoni','$visites','$rutes','$destacat','$nou','$ocult','$no_online','$special_img','$qr_img','$extra_fields','$min_price','$name_es','$description_es','$details_es','$use_es','$quotes_es','$price_es','$name_en','$description_en','$details_en','$use_en','$quotes_en','$price_en','$collaboradors','$ppt','$propietari','$res_days','$close_time','$aavv','$mail_aux','$com_obl','$com_aux','$linksessions','$recordatori','$recordatori_es','$recordatori_en','$xaccept','$xaccept_description','$xaccept_description_es','$xaccept_description_en','$taquilla_tancada','$portada_btiquets','$productes','$enviament_id','$pagament','$enviament_str','$codi_descompte')";
+            $sql="INSERT INTO box_data(name,description,details,img,price,type,url,quotes,activities,reservation,n_min,n_max,lat,lng,event_type,data,n_total,cellers,patrimoni,visites,rutes,destacat,nou,ocult,no_online,special_img,qr_img,extra_fields,min_price,name_es,description_es,details_es,reservation_es,quotes_es,price_es,name_en,description_en,details_en,reservation_en,quotes_en,price_en,collaboradors,persons_per_ticket,propietari,res_days,close_time,aavv,mail_aux,com_obl,com_aux,linksessions,recordatori,recordatori_es,recordatori_en,xaccept,xaccept_description,xaccept_description_es,xaccept_description_en,taquilla_tancada,portada_btiquets,productes,enviament_id,pagament,enviament_str,codi_descompte,productes_relacionats) VALUES ('$name','$description','$details','$img','$price','$type','$url','$quotes','$activities','$use','$n_min','$n_max','$lat','$lng','$etype','$edate','$etotal','$cellers','$patrimoni','$visites','$rutes','$destacat','$nou','$ocult','$no_online','$special_img','$qr_img','$extra_fields','$min_price','$name_es','$description_es','$details_es','$use_es','$quotes_es','$price_es','$name_en','$description_en','$details_en','$use_en','$quotes_en','$price_en','$collaboradors','$ppt','$propietari','$res_days','$close_time','$aavv','$mail_aux','$com_obl','$com_aux','$linksessions','$recordatori','$recordatori_es','$recordatori_en','$xaccept','$xaccept_description','$xaccept_description_es','$xaccept_description_en','$taquilla_tancada','$portada_btiquets','$productes','$enviament_id','$pagament','$enviament_str','$codi_descompte','$productes_relacionats')";
         }
         else
         {   
-            $sql="UPDATE box_data SET `name`='$name',`description`='$description',`details`='$details',`img`='$img',`price`='$price',`type`='$type',`url`='$url',`quotes`='$quotes',`activities`='$activities',`reservation`='$use',`n_min`='$n_min',`n_max`='$n_max',`lat`='$lat',`lng`='$lng',`event_type`='$etype',`data`='$edate',`n_total`='$etotal',`cellers`='$cellers',`patrimoni`='$patrimoni',`visites`='$visites',`rutes`='$rutes',`destacat`='$destacat',`nou`='$nou',`ocult`='$ocult',`no_online`='$no_online',`special_img`='$special_img',`qr_img`='$qr_img',`extra_fields`='$extra_fields',`min_price`='$min_price',`name_es`='$name_es',`description_es`='$description_es',`details_es`='$details_es',`reservation_es`='$use_es',`quotes_es`='$quotes_es',`price_es`='$price_es',`name_en`='$name_en',`description_en`='$description_en',`details_en`='$details_en',`reservation_en`='$use_en',`quotes_en`='$quotes_en',`price_en`='$price_en',`collaboradors`='$collaboradors',`persons_per_ticket`='$ppt',`propietari`='$propietari',`res_days`='$res_days',`close_time`='$close_time',`aavv`='$aavv',`mail_aux`='$mail_aux',`com_obl`='$com_obl',`com_aux`='$com_aux',`linksessions`='$linksessions',`recordatori`='$recordatori',`recordatori_es`='$recordatori_es',`recordatori_en`='$recordatori_en',`xaccept`='$xaccept',`xaccept_description`='$xaccept_description',`xaccept_description_es`='$xaccept_description_es',`xaccept_description_en`='$xaccept_description_en',`taquilla_tancada`='$taquilla_tancada',`portada_btiquets`='$portada_btiquets',`productes`='$productes',`enviament_id`='$enviament_id',`pagament`='$pagament',`enviament_str`='$enviament_str',`codi_descompte`='$codi_descompte' WHERE id='$id'";
+            $sql="UPDATE box_data SET `name`='$name',`description`='$description',`details`='$details',`img`='$img',`price`='$price',`type`='$type',`url`='$url',`quotes`='$quotes',`activities`='$activities',`reservation`='$use',`n_min`='$n_min',`n_max`='$n_max',`lat`='$lat',`lng`='$lng',`event_type`='$etype',`data`='$edate',`n_total`='$etotal',`cellers`='$cellers',`patrimoni`='$patrimoni',`visites`='$visites',`rutes`='$rutes',`destacat`='$destacat',`nou`='$nou',`ocult`='$ocult',`no_online`='$no_online',`special_img`='$special_img',`qr_img`='$qr_img',`extra_fields`='$extra_fields',`min_price`='$min_price',`name_es`='$name_es',`description_es`='$description_es',`details_es`='$details_es',`reservation_es`='$use_es',`quotes_es`='$quotes_es',`price_es`='$price_es',`name_en`='$name_en',`description_en`='$description_en',`details_en`='$details_en',`reservation_en`='$use_en',`quotes_en`='$quotes_en',`price_en`='$price_en',`collaboradors`='$collaboradors',`persons_per_ticket`='$ppt',`propietari`='$propietari',`res_days`='$res_days',`close_time`='$close_time',`aavv`='$aavv',`mail_aux`='$mail_aux',`com_obl`='$com_obl',`com_aux`='$com_aux',`linksessions`='$linksessions',`recordatori`='$recordatori',`recordatori_es`='$recordatori_es',`recordatori_en`='$recordatori_en',`xaccept`='$xaccept',`xaccept_description`='$xaccept_description',`xaccept_description_es`='$xaccept_description_es',`xaccept_description_en`='$xaccept_description_en',`taquilla_tancada`='$taquilla_tancada',`portada_btiquets`='$portada_btiquets',`productes`='$productes',`enviament_id`='$enviament_id',`pagament`='$pagament',`enviament_str`='$enviament_str',`codi_descompte`='$codi_descompte',`productes_relacionats`='$productes_relacionats' WHERE id='$id'";
         }
         $result = $mysqli->query($sql);
         error_log($sql);
