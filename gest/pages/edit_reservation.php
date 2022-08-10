@@ -7,7 +7,7 @@ $date_execution = null;
 $date_session = $time_session = "";
 
 if ($id > 0) {
-    $sql = "SELECT ref,user_id,comentaris,quantitat,total,box_id,data,confirmat,col_comentaris,quant_total,tipus,data_executada,session_id,nom,descripcio,data_reserva,regal,res_nom,res_mail,res_tel,res_mun,newsletter,pagament,res_adr_1,res_adr_2,res_cp,dades,genere,check_1,check_2,check_3,check_special,validat FROM reserva WHERE id='$id'";
+    $sql = "SELECT ref,user_id,comentaris,quantitat,total,box_id,data,confirmat,col_comentaris,quant_total,tipus,data_executada,session_id,nom,descripcio,data_reserva,regal,res_nom,res_mail,res_tel,res_mun,newsletter,pagament,res_adr_1,res_adr_2,res_cp,dades,genere,check_1,check_2,check_3,check_special,validat,codi_aplicat,descompte_aplicat FROM reserva WHERE id='$id'";
     $res = $mysqli->query($sql);
     $row = $res->fetch_row();
     $ref = $row[0];
@@ -46,6 +46,8 @@ if ($id > 0) {
     $check_3 = intval($row[30]);
     $check_special = intval($row[31]);
     $dades_info = null;
+    $codi_aplicat = $row[33];
+    $descompte_aplicat = floatval($row[34]);
 
     if ($dades != "") {
         $dades_info = decode_dades($dades);
@@ -128,6 +130,8 @@ if ($id > 0) {
     $check_2 = 0;
     $check_3 = 0;
     $check_special = 0;
+    $codi_aplicat = null;
+    $descompte_aplicat = 0;
 
     // Data
     date_default_timezone_set($zone);
@@ -1052,6 +1056,14 @@ if ($box_id != -1) {
                         <div class='form-group vtype1 vtype2 vtype3 vtype4 vtype5 vtype7'>
                             <label><?php echo translate("Preu Total", $lang); ?></label>
                             <input style="width:80px" class="form-control required" id="edit_total" name="edit_total" type="number" value='<?php echo $total; ?>' min='0' />
+                        </div>
+                        <div class='form-group'>
+                            <label><?php echo translate("Codi aplicat", $lang); ?></label>
+                            <input style="width:80px" class="form-control" id="codi_aplicat" name="codi_aplicat" type="text" value='<?php echo $codi_aplicat; ?>'/>
+                        </div>
+                        <div class='form-group'>
+                            <label><?php echo translate("Descompte aplicat", $lang); ?></label>
+                            <input style="width:80px" class="form-control" id="descompte_aplicat" name="descompte_aplicat" type="number" value='<?php echo $descompte_aplicat; ?>' min='0' />
                         </div>
                         <div class='form-group vtype1 vtype2 vtype3 vtype4'>
                             <label><?php echo translate("Quantitat total", $lang); ?></label>

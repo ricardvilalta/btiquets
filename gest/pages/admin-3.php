@@ -4,15 +4,15 @@
     {
         if ($accountuid > 0) {
             $compte = GetAccountInfo($mysqli, $accountuid);
-            $boxlist = GetBoxListAdmin($mysqli,-1,$compte['id']);
+            $boxlist = GetBoxListAdmin($mysqli,$ttype,$compte['id']);
         } else {
-            $boxlist = GetBoxListAdmin($mysqli,-1);
+            $boxlist = GetBoxListAdmin($mysqli,$ttype);
         }        
     }
     else
     {
         $compte = GetAccountfromUserInfo($mysqli,$_SESSION['user_id']);
-        $boxlist = GetBoxListAdmin($mysqli,-1,$compte['id']);
+        $boxlist = GetBoxListAdmin($mysqli,$ttype,$compte['id']);
     }     
 ?>
 
@@ -139,6 +139,8 @@
                             </li>
                             <li><a id="delete_box">Elimina taquilla</a>
                             </li>
+                            <li><a href="/admin/taquilles-totes">Visualitzar totes les taquilles (arxivades)</a>
+                            </li>
                             <?php
                             if($_SESSION['user_id']==$SUPERUSER)
                             {
@@ -162,6 +164,7 @@
                                         <?php if($_SESSION['user_id']==$SUPERUSER){?><th>#</th><?php } ?>
                                         <th>Nom</th>
                                         <th>Url</th>
+                                        <th>Estat</th>
                                         <th>Tipus</th>
                                         <?php
                                         if($_SESSION['user_id']==$SUPERUSER)
@@ -184,7 +187,8 @@
                                         <?php if($_SESSION['user_id']==$SUPERUSER){?><td><?php echo $box['id']; ?></td><?php } ?>
                                         <td><?php echo $box['name']; ?></td>
                                         <td><?php echo $server . "event/" . $box['url']; ?></td>
-                                        <td><?php if($box['etype']==0) echo "Sessió única"; else if($box['etype']==1) echo "Sessions múltiples"; else if($box['etype']==2) echo "Restaurant"; else if($box['etype']==3) echo "Suite allotjaments"; else if($box['etype']==4) echo "Productes simples"; else if($box['etype']==5) echo "Productes avançats"; ?></td>
+                                        <td><?php if($box['arxivada']) echo '<span style="color:#f0ad4e">ARXIVADA</span>'; elseif($box['ocult']) echo '<span style="color:#d9534f">INACTIVA</span>'; else echo '<span style="color:#5cb85c">ACTIVA</span>'; ?></td>
+                                        <td><?php echo $eventtype[$box['etype']];?></td>
                                         <?php
                                         if($_SESSION['user_id']==$SUPERUSER)
                                         {

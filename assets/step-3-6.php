@@ -158,18 +158,7 @@
             {
                 alert('<?php echo translate("Falta alguna de les dades necessàries", $lang); ?>');
             }
-        });                
-
-        <?php
-        if($box['id']==502 || $box['id']==510 || $box['id']==511 || $box['id']==548) // TRANSÈQUIA 2022 / ROMÀNIC AL BAGES
-        {?>
-            $('#name').change(function(){
-                if($("#name").length) {
-                    $(".dades_linia").first().find('.camp_2').val($(this).val());
-                }
-            });
-        <?php
-        }?>
+        });
     });
 
 </script>
@@ -183,6 +172,6 @@
     <?php
     }?>
     
-    <a href="#one" class="goto-prev scrolly">Prev</a>
+    <a href="#two" class="goto-prev scrolly">Prev</a>
     <?php include "registre.php";?>
 </div>

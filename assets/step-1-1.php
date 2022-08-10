@@ -19,7 +19,7 @@
             $inscrits = GetReservationFromSession($mysqli,$session['id']);
         ?>            
             $(".ui-datepicker-calendar td[data-month='<?php echo $smonth-1; ?>'][data-year='<?php echo $syear; ?>'] > a").filter(function(index) { return parseInt($(this).text()) == "<?php echo intval($sday); ?>"; }).css("background", "#8cd1a8");
-            sessions.push(["<?php echo $sday; ?>","<?php echo $smonth; ?>","<?php echo $syear; ?>","<?php echo $session['hora']; ?>","<?php echo $session['id']; ?>","<?php echo $session['session_name']; ?>","<?php echo $inscrits; ?>","<?php echo $session['places']; ?>","<?php echo $session['tarifes']; ?>"]);
+            sessions.push(["<?php echo $sday; ?>","<?php echo $smonth; ?>","<?php echo $syear; ?>","<?php echo $session['hora']; ?>","<?php echo $session['id']; ?>","<?php echo $session['session_name']; ?>","<?php echo $inscrits; ?>","<?php echo $session['places']; ?>","<?php echo $session['tarifes']; ?>","<?php echo $session['reserva_unica']; ?>"]);
             
         <?php
         }?> 
@@ -67,6 +67,9 @@
                         {       
                             freeplaces = 0;
                             if(sessions[i][7]-sessions[i][6]>0) freeplaces = sessions[i][7]-sessions[i][6];
+                            if(parseInt(sessions[i][9])) {
+                                if(sessions[i][6]>0) freeplaces=0;
+                            }
 
                             str = str + '<input data="' + sessions[i][0] + '/' + sessions[i][1] + '/' + sessions[i][2] + ' ' + hora + '" id="';
                             str += sessions[i][4];

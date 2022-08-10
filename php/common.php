@@ -33,6 +33,7 @@
     $tipusclient = array(-1 => "Indeterminat", 0 => "Escola", 1 => "Família", 2 => "Adults", 3 => "AAVV");
     $tipusactivitat = array(-1 => "Indeterminat", 0 => "Cultural", 1 => "Esport i salut", 2 => "Espiritual", 3 => "Promoció econòmica", 3 => "Fira i festes");
     $tipusdescompte = array(0 => "Import", 1 => "Percentatge");
+    $eventtype = array(0 => "Sessió única", 1 => "Sessions múltiples", 2 => "Restaurant", 3 => "Suite allotjaments", 4 => "Productes simples", 5 => "Productes avançats", 6 => "Data oberta - Xec regal", 7 => "Aportació voluntària");
 
     const _TIPUSIVA = array(21,10,4,0);
     

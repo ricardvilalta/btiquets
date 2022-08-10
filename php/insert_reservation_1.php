@@ -32,8 +32,10 @@
         $quant = $_POST["quant_str"];
         $no_solidari = false;
         $check_special = false;
+        $codi_aplicat = null;
         if($box_id>0)
         {
+            $descompte = null;
             $box = GetBox($mysqli,$box_id);
             if($box['codi_descompte']>0) {
                 $descompte = CheckDescompte($box['codi_descompte'],$_POST["codi_descompte"]);
@@ -84,12 +86,18 @@
                     if($total<0)$total=0;
                 }
 
-                if($descompte['type']==0){
-                    if($total-$descompte['descompte'] > 0) $total=$total-$descompte['descompte'];
-                    else $total=0;
-                }
-                else if($descompte['type']==1){
-                    $total=number_format($total*(1-$descompte['descompte']/100),2,',','.');
+                if($descompte!=null){
+                    if($descompte['type']==0){
+                        if($total-$descompte['descompte'] > 0) $total_aux=$total-$descompte['descompte'];
+                        else $total_aux=0;
+                    }
+                    else if($descompte['type']==1){
+                        $total_aux=number_format($total*(1-$descompte['descompte']/100),2,',','.');
+                    }
+
+                    $descompte_aplicat = $total - $total_aux;
+                    $total = $total_aux;
+                    $codi_aplicat = $_POST["codi_descompte"];
                 }
             }
             
@@ -119,10 +127,12 @@
                 if($found)
                 {
                     $inscrits = GetReservationFromSession($mysqli,$session['id']);
-                    if($qtotal > $session['places']-$inscrits)
-                    {
-                        $sense_places=true;
-                    }   
+                    if($session['reserva_unica']) {
+                        if($inscrits>0) $sense_places=true;
+                    }
+                    else {
+                        if($qtotal > $session['places']-$inscrits) $sense_places=true;
+                    }
                 }
                 else
                 {
@@ -144,7 +154,7 @@
             // Aquest string és le preu amb dos decimals però sense coma ni punt
             $total_str = number_format($total,2,'','');
 
-            $ret = InsertReservation($mysqli,-1,intval($_POST["box_id"]),-1,addslashes($_POST["com"]),addslashes($_POST["quant_str"]),$num_reserva,$total,$data,null,0,0,null,null,$_POST["data_res"],"","",addslashes($_POST["nom"]),addslashes($_POST["email"]),addslashes($_POST["tel"]),addslashes($_POST["city"]),false,"",6,false,null,$_POST["newsletter"],1,"","","",$_POST["dades"],$_POST["genere"],$_POST["check_1"],$_POST["check_2"],$_POST["check_3"],$check_special);
+            $ret = InsertReservation($mysqli,-1,intval($_POST["box_id"]),-1,addslashes($_POST["com"]),addslashes($_POST["quant_str"]),$num_reserva,$total,$data,null,0,0,null,null,$_POST["data_res"],"","",addslashes($_POST["nom"]),addslashes($_POST["email"]),addslashes($_POST["tel"]),addslashes($_POST["city"]),false,"",6,false,null,$_POST["newsletter"],1,"","","",$_POST["dades"],$_POST["genere"],$_POST["check_1"],$_POST["check_2"],$_POST["check_3"],$check_special,$codi_aplicat,$descompte_aplicat);
 
             // Si ha anat bé, preparo el formulari de pagament cap al TPV, o acabo el registre
             if($ret>0)
@@ -199,7 +209,7 @@
                     //Datos de configuración
                     $version="HMAC_SHA256_V1";
 
-                    PrepararTPV($miObj,$amount,$order,$merchantCode,$currency,$transactionType,$terminal,$merchantURL,$urlOK,$urlKO,$info_reserva['ref'],$info_reserva['ref']." - ".box['name'],$merchantName);
+                    PrepararTPV($miObj,$amount,$order,$merchantCode,$currency,$transactionType,$terminal,$merchantURL,$urlOK,$urlKO,$info_reserva['ref'],$info_reserva['ref']." - ".$box['name'],$merchantName);
 
                     // Se generan los parámetros de la petición	
                     $params = $miObj->createMerchantParameters();
@@ -207,7 +217,7 @@
 
                     if($accountdata['bizum'])
                     {
-                            PrepararTPV($miObj,$amount,$order,$merchantCode,$currency,$transactionType,$terminal,$merchantURL,$urlOK,$urlKO,$info_reserva['ref'],$info_reserva['ref']." - ".box['name'],$merchantName,'z');
+                            PrepararTPV($miObj,$amount,$order,$merchantCode,$currency,$transactionType,$terminal,$merchantURL,$urlOK,$urlKO,$info_reserva['ref'],$info_reserva['ref']." - ".$box['name'],$merchantName,'z');
 
                         // Se generan los parámetros de la petición	
                         $params_bizum = $miObj->createMerchantParameters();

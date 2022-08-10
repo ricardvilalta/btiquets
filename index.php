@@ -55,7 +55,7 @@
         {
             $box = GetBox($mysqli,$event);
             $compte = GetAccountInfo($mysqli,$box['propietari']);
-            if($box['ocult']==0)
+            if($box['ocult']==0 && $box['arxivada']==0)
             {
                 $sessions = GetSessions($mysqli,$event);
                 $reslist = GetActivityReservations($mysqli,$event);                                
@@ -442,7 +442,12 @@ else
 
                 <!-- Two -->
                     <section id="two" class="main special">
-                        <?php include('assets/step-2-0.php'); ?>
+                        <?php include('assets/step-2-6.php'); ?>
+                    </section>
+
+                <!-- Three -->
+                    <section id="three" class="main special">
+                        <?php include('assets/step-3-6.php'); ?>
                     </section>
 
                 <!-- Final -->

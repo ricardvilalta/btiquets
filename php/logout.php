@@ -1,6 +1,7 @@
 <?php
     include_once './../php/funcions.php';
 
+    error_log("LOGOUT");
     sec_session_start('btiquets_session_id');
     // Unset all session values
     $_SESSION = array();

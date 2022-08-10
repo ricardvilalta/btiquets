@@ -19,7 +19,7 @@ function GetDBData($from, $where = "", $orderby = "", $offset = 0, $limit = 0)
     if ($limit != 0) {
         $sql .= " limit $offset, $limit";
     }
-    error_log($sql);
+    //error_log($sql);
     $result = $mysqli->query($sql);
     $data = array();
     if ($result) {
@@ -85,7 +85,7 @@ function GetSpecificDBData($DBName, $DBField, $DBValue, $DBField_not = "", $DBVa
     }
 
     $result = $mysqli->query($sql);
-    error_log($sql);
+    //($sql);
     $data = array();
     if ($result) {
         $data_aux = array();
@@ -291,13 +291,13 @@ function InsertDBData($DBName, $data, $id)
     if ($id == -1) {
         $valors = implode(", ", $escaped_values);
         $sql = "INSERT INTO " . $DBName . " ( " . $columnes . ") VALUES (" . $valors . ")";
-        error_log($sql);
+        //error_log($sql);
     } else {
         $aux = array();
         foreach ($data_escaped as $columna => $valor) $aux[] = $columna . "=" . $valor;
         $colsivalors = implode(", ", $aux);
         $sql = "UPDATE " . $DBName . " SET " . $colsivalors . " WHERE id=" . $id;
-        error_log($sql);
+        //error_log($sql);
     }
 
     $result = $mysqli->query($sql);
@@ -814,23 +814,35 @@ function DelSpecificDBData($DBName, $DBField, $DBValue, $DBField_not = "", $DBVa
                 
         if($type==-1)
         {
-            //TOTES
+            //TOTES SENSE LES ARXIVADES
             if($userid==-1)
             {            
-                $sql="SELECT id,name,type,img,url,price,quotes,nou,activities,special_img,no_online,ocult,destacat,event_type,propietari FROM box_data ORDER BY name";
+                $sql="SELECT id,name,type,img,url,price,quotes,nou,activities,special_img,no_online,ocult,destacat,event_type,propietari,taquilla_arxivada FROM box_data WHERE taquilla_arxivada=0 ORDER BY name";
             }
             else
             {
-                $sql="SELECT id,name,type,img,url,price,quotes,nou,activities,special_img,no_online,ocult,destacat,event_type,propietari FROM box_data WHERE propietari=$userid ORDER BY name";
+                $sql="SELECT id,name,type,img,url,price,quotes,nou,activities,special_img,no_online,ocult,destacat,event_type,propietari,taquilla_arxivada FROM box_data WHERE propietari=$userid AND taquilla_arxivada=0 ORDER BY name";
+            }
+        }
+        else if($type==-3)
+        {
+            //TOTES AMB LES ARXIVADES
+            if($userid==-1)
+            {            
+                $sql="SELECT id,name,type,img,url,price,quotes,nou,activities,special_img,no_online,ocult,destacat,event_type,propietari,taquilla_arxivada FROM box_data ORDER BY name";
+            }
+            else
+            {
+                $sql="SELECT id,name,type,img,url,price,quotes,nou,activities,special_img,no_online,ocult,destacat,event_type,propietari,taquilla_arxivada FROM box_data WHERE propietari=$userid ORDER BY name";
             }
         }
         else if($type==-2)  // DESTACADES
         {
-            $sql="SELECT id,name,type,img,url,price,quotes,nou,activities,special_img,no_online,ocult,destacat,event_type,propietari FROM box_data WHERE destacat=1 ORDER BY ipos";
+            $sql="SELECT id,name,type,img,url,price,quotes,nou,activities,special_img,no_online,ocult,destacat,event_type,propietari,taquilla_arxivada FROM box_data WHERE destacat=1 ORDER BY ipos";
         }
         else
         {
-            $sql="SELECT id,name,type,img,url,price,quotes,nou,activities,special_img,no_online,ocult,destacat,event_type,propietari FROM box_data WHERE type=$type ORDER BY ipos";
+            $sql="SELECT id,name,type,img,url,price,quotes,nou,activities,special_img,no_online,ocult,destacat,event_type,propietari,taquilla_arxivada FROM box_data WHERE type=$type ORDER BY ipos";
         }
         
         $result=$mysqli->query($sql); 
@@ -839,7 +851,7 @@ function DelSpecificDBData($DBName, $DBField, $DBValue, $DBField_not = "", $DBVa
         {            
             while ( $row = $result->fetch_row() )
             {                
-                $data[] = array('id'=>$row[0],'name'=>$row[1],'type'=>$row[2],'img'=>'boxes/box_'.$row[0].'/'.$row[3],'url'=>$row[4],'price'=>$row[5],'quotes'=>$row[6],'nou'=>intval($row[7]),'activities'=>intval($row[8]),'special_img'=>'boxes/box_'.$row[0].'/'.$row[9],'no_online'=>intval($row[10]),'ocult'=>intval($row[11]),'destacat'=>intval($row[12]),'etype'=>intval($row[13]),'propietari'=>intval($row[14]));
+                $data[] = array('id'=>$row[0],'name'=>$row[1],'type'=>$row[2],'img'=>'boxes/box_'.$row[0].'/'.$row[3],'url'=>$row[4],'price'=>$row[5],'quotes'=>$row[6],'nou'=>intval($row[7]),'activities'=>intval($row[8]),'special_img'=>'boxes/box_'.$row[0].'/'.$row[9],'no_online'=>intval($row[10]),'ocult'=>intval($row[11]),'destacat'=>intval($row[12]),'etype'=>intval($row[13]),'propietari'=>intval($row[14]),'arxivada'=>intval($row[15]));
             }
         }
         
@@ -1522,15 +1534,15 @@ function DelSpecificDBData($DBName, $DBField, $DBValue, $DBField_not = "", $DBVa
         switch($lang)
         {
             case 'es':
-                $sql="SELECT name_es,type,description_es,price_es,quotes_es,activities,details_es,reservation_es,n_min,n_max,lat,lng,url,event_type,data,n_total,cellers,patrimoni,visites,rutes,promo_quant,promo_id,no_online,special_img,extra_fields,img,collaboradors,qr_img,persons_per_ticket,res_days,close_time,propietari,sessio_unica,ocult,aavv,mail_aux,com_obl,com_aux,linksessions,recordatori_es,xaccept,xaccept_description_es,taquilla_tancada,productes,enviament_id,pagament,enviament_str,codi_descompte,productes_relacionats FROM box_data WHERE id=$id";
+                $sql="SELECT name_es,type,description_es,price_es,quotes_es,activities,details_es,reservation_es,n_min,n_max,lat,lng,url,event_type,data,n_total,cellers,patrimoni,visites,rutes,promo_quant,promo_id,no_online,special_img,extra_fields,img,collaboradors,qr_img,persons_per_ticket,res_days,close_time,propietari,sessio_unica,ocult,aavv,mail_aux,com_obl,com_aux,linksessions,recordatori_es,xaccept,xaccept_description_es,taquilla_tancada,productes,enviament_id,pagament,enviament_str,codi_descompte,productes_relacionats,taquilla_arxivada FROM box_data WHERE id=$id";
                 break;
             
             case 'en':
-                $sql="SELECT name_en,type,description_en,price_en,quotes_en,activities,details_en,reservation_en,n_min,n_max,lat,lng,url,event_type,data,n_total,cellers,patrimoni,visites,rutes,promo_quant,promo_id,no_online,special_img,extra_fields,img,collaboradors,qr_img,persons_per_ticket,res_days,close_time,propietari,sessio_unica,ocult,aavv,mail_aux,com_obl,com_aux,linksessions,recordatori_en,xaccept,xaccept_description_en,taquilla_tancada,productes,enviament_id,pagament,enviament_str,codi_descompte,productes_relacionats FROM box_data WHERE id=$id";
+                $sql="SELECT name_en,type,description_en,price_en,quotes_en,activities,details_en,reservation_en,n_min,n_max,lat,lng,url,event_type,data,n_total,cellers,patrimoni,visites,rutes,promo_quant,promo_id,no_online,special_img,extra_fields,img,collaboradors,qr_img,persons_per_ticket,res_days,close_time,propietari,sessio_unica,ocult,aavv,mail_aux,com_obl,com_aux,linksessions,recordatori_en,xaccept,xaccept_description_en,taquilla_tancada,productes,enviament_id,pagament,enviament_str,codi_descompte,productes_relacionats,taquilla_arxivada FROM box_data WHERE id=$id";
                 break;
             
             default:
-                $sql="SELECT name,type,description,price,quotes,activities,details,reservation,n_min,n_max,lat,lng,url,event_type,data,n_total,cellers,patrimoni,visites,rutes,promo_quant,promo_id,no_online,special_img,extra_fields,img,collaboradors,qr_img,persons_per_ticket,res_days,close_time,propietari,sessio_unica,ocult,aavv,mail_aux,com_obl,com_aux,linksessions,recordatori,xaccept,xaccept_description,taquilla_tancada,productes,enviament_id,pagament,enviament_str,codi_descompte,productes_relacionats FROM box_data WHERE id=$id";
+                $sql="SELECT name,type,description,price,quotes,activities,details,reservation,n_min,n_max,lat,lng,url,event_type,data,n_total,cellers,patrimoni,visites,rutes,promo_quant,promo_id,no_online,special_img,extra_fields,img,collaboradors,qr_img,persons_per_ticket,res_days,close_time,propietari,sessio_unica,ocult,aavv,mail_aux,com_obl,com_aux,linksessions,recordatori,xaccept,xaccept_description,taquilla_tancada,productes,enviament_id,pagament,enviament_str,codi_descompte,productes_relacionats,taquilla_arxivada FROM box_data WHERE id=$id";
                 break;
         }
         $result=$mysqli->query($sql);
@@ -1558,7 +1570,7 @@ function DelSpecificDBData($DBName, $DBField, $DBValue, $DBField_not = "", $DBVa
                     }
                 }
 
-                $box = array('id'=>$id,'name'=>$row[0],'type'=>$row[1],'description'=>html_entity_decode(nl2br(htmlspecialchars(stripslashes($row[2])))),'price'=>$row[3],'quotes'=>html_entity_decode(nl2br(htmlspecialchars(stripslashes($row[4])))),'activities'=>floatval($row[5]),'details'=>html_entity_decode(nl2br(htmlspecialchars(stripslashes($row[6])))),'use'=>html_entity_decode(nl2br(htmlspecialchars(stripslashes($row[7])))),'n_min'=>intval($row[8]),'n_max'=>intval($row[9]),'lat'=>floatval($row[10]),'lng'=>floatval($row[11]),'url'=>$row[12],'etype'=>intval($row[13]),'edate'=>stripslashes($row[14]),'etotal'=>intval($row[15]),'erestotal'=>$res_total,'cellers'=>$row[16],'patrimoni'=>$row[17],'visites'=>$row[18],'rutes'=>$row[19],'promo_quant'=>floatval($row[20]),'promo_id'=>intval($row[21]),'no_online'=>intval($row[22]),'special_img'=>$row[23],'extra_fields'=>intval($row[24]),'img'=>'boxes/box_'.$id.'/'.$row[25],'collaboradors'=>stripslashes($row[26]),'qr_img'=>$row[27],'persons_per_ticket'=>$row[28],'res_days'=>$row[29],'close_time'=>intval($row[30]),'propietari'=>intval($row[31]),'sessio_unica'=>intval($row[32]),'ocult'=>intval($row[33]),'aavv'=>intval($row[34]),'mail_aux'=>stripslashes($row[35]),'com_obl'=>intval($row[36]),'com_aux'=>stripslashes($row[37]),'linksessions'=>intval($row[38]),'recordatori'=>stripslashes($row[39]),'xaccept'=>intval($row[40]),'xaccept_description'=>stripslashes($row[41]),'taquilla_tancada'=>intval($row[42]),'productes'=>stripslashes($row[43]),'enviament_id'=>intval($row[44]),'pagament'=>intval($row[45]),'enviament_str'=>stripslashes($row[46]),'codi_descompte'=>intval($row[47]),'productes_relacionats'=>stripslashes($row[48]));
+                $box = array('id'=>$id,'name'=>$row[0],'type'=>$row[1],'description'=>html_entity_decode(nl2br(htmlspecialchars(stripslashes($row[2])))),'price'=>$row[3],'quotes'=>html_entity_decode(nl2br(htmlspecialchars(stripslashes($row[4])))),'activities'=>floatval($row[5]),'details'=>html_entity_decode(nl2br(htmlspecialchars(stripslashes($row[6])))),'use'=>html_entity_decode(nl2br(htmlspecialchars(stripslashes($row[7])))),'n_min'=>intval($row[8]),'n_max'=>intval($row[9]),'lat'=>floatval($row[10]),'lng'=>floatval($row[11]),'url'=>$row[12],'etype'=>intval($row[13]),'edate'=>stripslashes($row[14]),'etotal'=>intval($row[15]),'erestotal'=>$res_total,'cellers'=>$row[16],'patrimoni'=>$row[17],'visites'=>$row[18],'rutes'=>$row[19],'promo_quant'=>floatval($row[20]),'promo_id'=>intval($row[21]),'no_online'=>intval($row[22]),'special_img'=>$row[23],'extra_fields'=>intval($row[24]),'img'=>'boxes/box_'.$id.'/'.$row[25],'collaboradors'=>stripslashes($row[26]),'qr_img'=>$row[27],'persons_per_ticket'=>$row[28],'res_days'=>$row[29],'close_time'=>intval($row[30]),'propietari'=>intval($row[31]),'sessio_unica'=>intval($row[32]),'ocult'=>intval($row[33]),'aavv'=>intval($row[34]),'mail_aux'=>stripslashes($row[35]),'com_obl'=>intval($row[36]),'com_aux'=>stripslashes($row[37]),'linksessions'=>intval($row[38]),'recordatori'=>stripslashes($row[39]),'xaccept'=>intval($row[40]),'xaccept_description'=>stripslashes($row[41]),'taquilla_tancada'=>intval($row[42]),'productes'=>stripslashes($row[43]),'enviament_id'=>intval($row[44]),'pagament'=>intval($row[45]),'enviament_str'=>stripslashes($row[46]),'codi_descompte'=>stripslashes($row[47]),'productes_relacionats'=>stripslashes($row[48]),'arxivada'=>intval($row[49]));
             }
         }
 
@@ -2093,7 +2105,7 @@ function DelSpecificDBData($DBName, $DBField, $DBValue, $DBField_not = "", $DBVa
         }
         
         $sql .= $limitstr;
-        error_log($sql);
+        //error_log($sql);
         
         $result = $mysqli->query($sql);
                 
@@ -3113,11 +3125,11 @@ function DelSpecificDBData($DBName, $DBField, $DBValue, $DBField_not = "", $DBVa
         // recullo totes les sessions d'aquesta experiència
         if($admin)
         {
-            $sql="SELECT id,data,places,estat,antelacio,session_name,tarifes FROM sessions WHERE box_id='$box_id' AND estat!=0 ORDER BY data";
+            $sql="SELECT id,data,places,estat,antelacio,session_name,tarifes,reserva_unica FROM sessions WHERE box_id='$box_id' AND estat!=0 ORDER BY data";
         }
         else
         {
-            $sql="SELECT id,data,places,estat,antelacio,session_name,tarifes FROM sessions WHERE box_id='$box_id' AND estat!=0 AND `data` > DATE_SUB(now(), INTERVAL 1 DAY) AND DATE_SUB(data, INTERVAL antelacio HOUR) > now() ORDER BY data";
+            $sql="SELECT id,data,places,estat,antelacio,session_name,tarifes,reserva_unica FROM sessions WHERE box_id='$box_id' AND estat!=0 AND `data` > DATE_SUB(now(), INTERVAL 1 DAY) AND DATE_SUB(data, INTERVAL antelacio HOUR) > now() ORDER BY data";
         }
         $res = $mysqli->query($sql);
         while($row = $res->fetch_row())
@@ -3133,7 +3145,7 @@ function DelSpecificDBData($DBName, $DBField, $DBValue, $DBField_not = "", $DBVa
                 $date_session = date_format($sdata,'d-m-Y');
                 $time_session = date_format($sdata,'H:i');
             }
-            $data[] = array('id'=>intval($row[0]),'box_id'=>$box_id,'data'=>$date_session,'hora'=>$time_session,'places'=>$row[2],'estat'=>intval($row[3]),'antelacio'=>intval($row[4]),'session_name'=>$row[5],'tarifes'=>$row[6]);
+            $data[] = array('id'=>intval($row[0]),'box_id'=>$box_id,'data'=>$date_session,'hora'=>$time_session,'places'=>$row[2],'estat'=>intval($row[3]),'antelacio'=>intval($row[4]),'session_name'=>$row[5],'tarifes'=>$row[6],'reserva_unica'=>intval($row[7]));
         }
         return $data;
     }
@@ -3143,7 +3155,7 @@ function DelSpecificDBData($DBName, $DBField, $DBValue, $DBField_not = "", $DBVa
         $data = null;
         
         // recullo totes les sessions d'aquesta experiència
-        $sql="SELECT id,data,places,estat,antelacio,box_id,all_day,session_name,tarifes FROM sessions WHERE id='$session_id'";        
+        $sql="SELECT id,data,places,estat,antelacio,box_id,all_day,session_name,tarifes,reserva_unica FROM sessions WHERE id='$session_id'";        
         $res = $mysqli->query($sql);
         if($res)
         {
@@ -3168,7 +3180,7 @@ function DelSpecificDBData($DBName, $DBField, $DBValue, $DBField_not = "", $DBVa
                         $time_session = date_format($sdata,'H:i');
                     }
                 }
-                $data = array('id'=>intval($row[0]),'box_id'=>$row[5],'data'=>$date_session,'hora'=>$time_session,'places'=>$row[2],'estat'=>intval($row[3]),'antelacio'=>intval($row[4]),'session_name'=>$row[7],'tarifes'=>$row[8]);
+                $data = array('id'=>intval($row[0]),'box_id'=>$row[5],'data'=>$date_session,'hora'=>$time_session,'places'=>$row[2],'estat'=>intval($row[3]),'antelacio'=>intval($row[4]),'session_name'=>$row[7],'tarifes'=>$row[8],'reserva_unica'=>intval($row[9]));
             }
         }
         
@@ -3272,7 +3284,7 @@ function DelSpecificDBData($DBName, $DBField, $DBValue, $DBField_not = "", $DBVa
         return $ret;
     }
 
-    function InsertBox($mysqli,$id,$name,$description,$details,$use,$price,$type,$quotes,$img,$activities,$n_min,$n_max,$lat,$lng,$etype,$edate,$etotal,$cellers,$patrimoni,$visites,$rutes,$destacat,$nou,$ocult,$no_online,$special_img,$qr_img,$extra_fields,$min_price,$name_es,$description_es,$details_es,$use_es,$quotes_es,$price_es,$name_en,$description_en,$details_en,$use_en,$quotes_en,$price_en,$ppt,$collaboradors,$sessions,$res_days="",$close_time=12,$propietari=0,$sessio_unica="",$aavv=false,$mail_aux="",$com_obl=false,$com_aux="",$linksessions=-1,$recordatori="",$recordatori_es="",$recordatori_en="",$xaccept=false,$xaccept_description="",$xaccept_description_es="",$xaccept_description_en="",$taquilla_tancada=false,$portada_btiquets=true,$productes="",$enviament_id=0,$pagament=1,$enviament_str="",$codi_descompte=-1,$productes_relacionats="")
+    function InsertBox($mysqli,$id,$name,$description,$details,$use,$price,$type,$quotes,$img,$activities,$n_min,$n_max,$lat,$lng,$etype,$edate,$etotal,$cellers,$patrimoni,$visites,$rutes,$destacat,$nou,$ocult,$no_online,$special_img,$qr_img,$extra_fields,$min_price,$name_es,$description_es,$details_es,$use_es,$quotes_es,$price_es,$name_en,$description_en,$details_en,$use_en,$quotes_en,$price_en,$ppt,$collaboradors,$sessions,$res_days="",$close_time=12,$propietari=0,$sessio_unica="",$aavv=false,$mail_aux="",$com_obl=false,$com_aux="",$linksessions=-1,$recordatori="",$recordatori_es="",$recordatori_en="",$xaccept=false,$xaccept_description="",$xaccept_description_es="",$xaccept_description_en="",$taquilla_tancada=false,$portada_btiquets=true,$productes="",$enviament_id=0,$pagament=1,$enviament_str="",$codi_descompte=-1,$productes_relacionats="",$taquilla_arxivada=false)
     {
         global $lang;
         $ret=-1;
@@ -3295,14 +3307,14 @@ function DelSpecificDBData($DBName, $DBField, $DBValue, $DBField_not = "", $DBVa
         
         if($id==-1)
         {
-            $sql="INSERT INTO box_data(name,description,details,img,price,type,url,quotes,activities,reservation,n_min,n_max,lat,lng,event_type,data,n_total,cellers,patrimoni,visites,rutes,destacat,nou,ocult,no_online,special_img,qr_img,extra_fields,min_price,name_es,description_es,details_es,reservation_es,quotes_es,price_es,name_en,description_en,details_en,reservation_en,quotes_en,price_en,collaboradors,persons_per_ticket,propietari,res_days,close_time,aavv,mail_aux,com_obl,com_aux,linksessions,recordatori,recordatori_es,recordatori_en,xaccept,xaccept_description,xaccept_description_es,xaccept_description_en,taquilla_tancada,portada_btiquets,productes,enviament_id,pagament,enviament_str,codi_descompte,productes_relacionats) VALUES ('$name','$description','$details','$img','$price','$type','$url','$quotes','$activities','$use','$n_min','$n_max','$lat','$lng','$etype','$edate','$etotal','$cellers','$patrimoni','$visites','$rutes','$destacat','$nou','$ocult','$no_online','$special_img','$qr_img','$extra_fields','$min_price','$name_es','$description_es','$details_es','$use_es','$quotes_es','$price_es','$name_en','$description_en','$details_en','$use_en','$quotes_en','$price_en','$collaboradors','$ppt','$propietari','$res_days','$close_time','$aavv','$mail_aux','$com_obl','$com_aux','$linksessions','$recordatori','$recordatori_es','$recordatori_en','$xaccept','$xaccept_description','$xaccept_description_es','$xaccept_description_en','$taquilla_tancada','$portada_btiquets','$productes','$enviament_id','$pagament','$enviament_str','$codi_descompte','$productes_relacionats')";
+            $sql="INSERT INTO box_data(name,description,details,img,price,type,url,quotes,activities,reservation,n_min,n_max,lat,lng,event_type,data,n_total,cellers,patrimoni,visites,rutes,destacat,nou,ocult,no_online,special_img,qr_img,extra_fields,min_price,name_es,description_es,details_es,reservation_es,quotes_es,price_es,name_en,description_en,details_en,reservation_en,quotes_en,price_en,collaboradors,persons_per_ticket,propietari,res_days,close_time,aavv,mail_aux,com_obl,com_aux,linksessions,recordatori,recordatori_es,recordatori_en,xaccept,xaccept_description,xaccept_description_es,xaccept_description_en,taquilla_tancada,portada_btiquets,productes,enviament_id,pagament,enviament_str,codi_descompte,productes_relacionats,taquilla_arxivada) VALUES ('$name','$description','$details','$img','$price','$type','$url','$quotes','$activities','$use','$n_min','$n_max','$lat','$lng','$etype','$edate','$etotal','$cellers','$patrimoni','$visites','$rutes','$destacat','$nou','$ocult','$no_online','$special_img','$qr_img','$extra_fields','$min_price','$name_es','$description_es','$details_es','$use_es','$quotes_es','$price_es','$name_en','$description_en','$details_en','$use_en','$quotes_en','$price_en','$collaboradors','$ppt','$propietari','$res_days','$close_time','$aavv','$mail_aux','$com_obl','$com_aux','$linksessions','$recordatori','$recordatori_es','$recordatori_en','$xaccept','$xaccept_description','$xaccept_description_es','$xaccept_description_en','$taquilla_tancada','$portada_btiquets','$productes','$enviament_id','$pagament','$enviament_str','$codi_descompte','$productes_relacionats','$taquilla_arxivada')";
         }
         else
         {   
-            $sql="UPDATE box_data SET `name`='$name',`description`='$description',`details`='$details',`img`='$img',`price`='$price',`type`='$type',`url`='$url',`quotes`='$quotes',`activities`='$activities',`reservation`='$use',`n_min`='$n_min',`n_max`='$n_max',`lat`='$lat',`lng`='$lng',`event_type`='$etype',`data`='$edate',`n_total`='$etotal',`cellers`='$cellers',`patrimoni`='$patrimoni',`visites`='$visites',`rutes`='$rutes',`destacat`='$destacat',`nou`='$nou',`ocult`='$ocult',`no_online`='$no_online',`special_img`='$special_img',`qr_img`='$qr_img',`extra_fields`='$extra_fields',`min_price`='$min_price',`name_es`='$name_es',`description_es`='$description_es',`details_es`='$details_es',`reservation_es`='$use_es',`quotes_es`='$quotes_es',`price_es`='$price_es',`name_en`='$name_en',`description_en`='$description_en',`details_en`='$details_en',`reservation_en`='$use_en',`quotes_en`='$quotes_en',`price_en`='$price_en',`collaboradors`='$collaboradors',`persons_per_ticket`='$ppt',`propietari`='$propietari',`res_days`='$res_days',`close_time`='$close_time',`aavv`='$aavv',`mail_aux`='$mail_aux',`com_obl`='$com_obl',`com_aux`='$com_aux',`linksessions`='$linksessions',`recordatori`='$recordatori',`recordatori_es`='$recordatori_es',`recordatori_en`='$recordatori_en',`xaccept`='$xaccept',`xaccept_description`='$xaccept_description',`xaccept_description_es`='$xaccept_description_es',`xaccept_description_en`='$xaccept_description_en',`taquilla_tancada`='$taquilla_tancada',`portada_btiquets`='$portada_btiquets',`productes`='$productes',`enviament_id`='$enviament_id',`pagament`='$pagament',`enviament_str`='$enviament_str',`codi_descompte`='$codi_descompte',`productes_relacionats`='$productes_relacionats' WHERE id='$id'";
+            $sql="UPDATE box_data SET `name`='$name',`description`='$description',`details`='$details',`img`='$img',`price`='$price',`type`='$type',`url`='$url',`quotes`='$quotes',`activities`='$activities',`reservation`='$use',`n_min`='$n_min',`n_max`='$n_max',`lat`='$lat',`lng`='$lng',`event_type`='$etype',`data`='$edate',`n_total`='$etotal',`cellers`='$cellers',`patrimoni`='$patrimoni',`visites`='$visites',`rutes`='$rutes',`destacat`='$destacat',`nou`='$nou',`ocult`='$ocult',`no_online`='$no_online',`special_img`='$special_img',`qr_img`='$qr_img',`extra_fields`='$extra_fields',`min_price`='$min_price',`name_es`='$name_es',`description_es`='$description_es',`details_es`='$details_es',`reservation_es`='$use_es',`quotes_es`='$quotes_es',`price_es`='$price_es',`name_en`='$name_en',`description_en`='$description_en',`details_en`='$details_en',`reservation_en`='$use_en',`quotes_en`='$quotes_en',`price_en`='$price_en',`collaboradors`='$collaboradors',`persons_per_ticket`='$ppt',`propietari`='$propietari',`res_days`='$res_days',`close_time`='$close_time',`aavv`='$aavv',`mail_aux`='$mail_aux',`com_obl`='$com_obl',`com_aux`='$com_aux',`linksessions`='$linksessions',`recordatori`='$recordatori',`recordatori_es`='$recordatori_es',`recordatori_en`='$recordatori_en',`xaccept`='$xaccept',`xaccept_description`='$xaccept_description',`xaccept_description_es`='$xaccept_description_es',`xaccept_description_en`='$xaccept_description_en',`taquilla_tancada`='$taquilla_tancada',`portada_btiquets`='$portada_btiquets',`productes`='$productes',`enviament_id`='$enviament_id',`pagament`='$pagament',`enviament_str`='$enviament_str',`codi_descompte`='$codi_descompte',`productes_relacionats`='$productes_relacionats',`taquilla_arxivada`='$taquilla_arxivada' WHERE id='$id'";
         }
         $result = $mysqli->query($sql);
-        error_log($sql);
+        //error_log($sql);
         if($result)
         {
             $ret = $mysqli->insert_id;
@@ -3386,7 +3398,7 @@ function CopyHouse($mysqli,$id)
     {        
         $sql = "INSERT into allotjaments(name,poblacio,mail,tel,web,description,type,modalitat,propietari,ocult,name_es,description_es,name_en,description_en,modalitat_es,modalitat_en,mail_aux) SELECT name,poblacio,mail,tel,web,description,type,modalitat,propietari,ocult,name_es,description_es,name_en,description_en,modalitat_es,modalitat_en,mail_aux from allotjaments where id='$id';";
         $result=$mysqli->query($sql);
-        error_log($sql);
+        //error_log($sql);
         if($result)
         {
             $newid = $mysqli->insert_id;
@@ -3462,7 +3474,7 @@ function CopyProducte($mysqli,$id)
 {        
     $sql = "INSERT into productes(name,poblacio,mail,tel,web,description,type,modalitat,propietari,ocult,name_es,description_es,name_en,description_en,modalitat_es,modalitat_en,mail_aux) SELECT name,poblacio,mail,tel,web,description,type,modalitat,propietari,ocult,name_es,description_es,name_en,description_en,modalitat_es,modalitat_en,mail_aux from productes where id='$id';";
     $result=$mysqli->query($sql);
-    error_log($sql);
+    //error_log($sql);
     if($result)
     {
         $newid = $mysqli->insert_id;
@@ -3528,7 +3540,7 @@ function CopyEnviament($mysqli,$id)
 {        
     $sql = "INSERT into enviaments(name,description,type,deststr,propietari) SELECT name,description,type,deststr,propietari from enviaments where id='$id';";
     $result=$mysqli->query($sql);
-    error_log($sql);
+    //error_log($sql);
     if($result)
     {
         $newid = $mysqli->insert_id;
@@ -3567,8 +3579,21 @@ function AdminSession($mysqli,$sessionstr,$id)
     $sql = "";
     $session_name = "";
     $tarifes = "-1:";
+    $reserva_unica = 0;
     $sessionitem = explode('%',$sessionstr);
-    if(count($sessionitem)>=8)
+    if(count($sessionitem)>=9)
+    {
+        $del = intval($sessionitem[0]);
+        $sid = intval($sessionitem[1]);
+        $data = $sessionitem[2];
+        $places = intval($sessionitem[3]);
+        $estat = intval($sessionitem[4]);
+        $antelacio = intval($sessionitem[5]);
+        $session_name = $sessionitem[6];
+        $tarifes = $sessionitem[7];
+        $reserva_unica = intval($sessionitem[8]);
+    }
+    else if(count($sessionitem)==8)
     {
         $del = intval($sessionitem[0]);
         $sid = intval($sessionitem[1]);
@@ -3630,7 +3655,7 @@ function AdminSession($mysqli,$sessionstr,$id)
 
                 $sdata = date_create_from_format('d-m-Y H:i',$data);
                 $date_str = date_format($sdata,'Y-m-d H:i:s');
-                $sql="INSERT INTO sessions(data,box_id,places,estat,antelacio,session_name,tarifes) VALUES ('$date_str','$id','$places','$estat','$antelacio','$session_name','$tarifes')";
+                $sql="INSERT INTO sessions(data,box_id,places,estat,antelacio,session_name,tarifes,reserva_unica) VALUES ('$date_str','$id','$places','$estat','$antelacio','$session_name','$tarifes','$reserva_unica')";
 
                 $result = $mysqli->query($sql);
                 $sql="UPDATE box_data SET `sessio_unica`='$mysqli->insert_id' WHERE id='$id'";
@@ -3642,7 +3667,7 @@ function AdminSession($mysqli,$sessionstr,$id)
             default:    // modifico la sessió
                 $sdata = date_create_from_format('d-m-Y H:i',$data);
                 $date_str = date_format($sdata,'Y-m-d H:i:s');
-                $sql="UPDATE sessions SET `data`='$date_str',`box_id`='$id',`places`='$places',`estat`='$estat',`antelacio`='$antelacio',`session_name`='$session_name',`tarifes`='$tarifes' WHERE id='$sid'";
+                $sql="UPDATE sessions SET `data`='$date_str',`box_id`='$id',`places`='$places',`estat`='$estat',`antelacio`='$antelacio',`session_name`='$session_name',`tarifes`='$tarifes',`reserva_unica`='$reserva_unica' WHERE id='$sid'";
                 $result = $mysqli->query($sql);
             
                 break;
@@ -4083,7 +4108,7 @@ function AdminSession($mysqli,$sessionstr,$id)
         return $codi;
     }
 
-    function InsertReservation($mysqli,$id,$box_id,$user_id,$comentaris,$quant_str,$num_reserva,$total,$data,$state,$quant_total,$tipus,$data_r,$data_e,$session_id=-1,$bnom="",$bdesc="",$rnom="",$rmail="",$rtel="",$rmun="",$regal=false,$text_regal="",$caducitat=6,$aavv=false,$data_e_out=null,$newsletter=false,$pagament=1,$addr1="",$addr2="",$cp="",$dades="",$genere=0,$check_1=0,$check_2=0,$check_3=0,$check_special=0)
+    function InsertReservation($mysqli,$id,$box_id,$user_id,$comentaris,$quant_str,$num_reserva,$total,$data,$state,$quant_total,$tipus,$data_r,$data_e,$session_id=-1,$bnom="",$bdesc="",$rnom="",$rmail="",$rtel="",$rmun="",$regal=false,$text_regal="",$caducitat=6,$aavv=false,$data_e_out=null,$newsletter=false,$pagament=1,$addr1="",$addr2="",$cp="",$dades="",$genere=0,$check_1=0,$check_2=0,$check_3=0,$check_special=0,$codi_aplicat=null,$descompte_aplicat=0)
     {
         $ret=-1;
         
@@ -4100,7 +4125,7 @@ function AdminSession($mysqli,$sessionstr,$id)
         
         if($id==-1)
         {
-            $sql="INSERT INTO reserva (ref,user_id,comentaris,quantitat,box_id,total,data,data_reserva,data_executada,quant_total,tipus,session_id,nom,descripcio,res_nom,res_mail,res_tel,res_mun,regal,text_regal,caducitat,aavv,data_reserva_out,newsletter,pagament,res_adr_1,res_adr_2,res_cp,dades,genere,check_1,check_2,check_3,check_special) VALUES ('$num_reserva','$user_id','$comentaris','$quant_str','$box_id','$total','$data','$data_r','$data_e','$quant_total','$tipus','$session_id','$bnom','$bdesc','$rnom','$rmail','$rtel','$rmun','$regal','$text_regal','$caducitat','$aavv','$data_e_out','$newsletter','$pagament','$addr1','$addr2','$cp','$dades','$genere','$check_1','$check_2','$check_3','$check_special')";
+            $sql="INSERT INTO reserva (ref,user_id,comentaris,quantitat,box_id,total,data,data_reserva,data_executada,quant_total,tipus,session_id,nom,descripcio,res_nom,res_mail,res_tel,res_mun,regal,text_regal,caducitat,aavv,data_reserva_out,newsletter,pagament,res_adr_1,res_adr_2,res_cp,dades,genere,check_1,check_2,check_3,check_special,codi_aplicat,descompte_aplicat) VALUES ('$num_reserva','$user_id','$comentaris','$quant_str','$box_id','$total','$data','$data_r','$data_e','$quant_total','$tipus','$session_id','$bnom','$bdesc','$rnom','$rmail','$rtel','$rmun','$regal','$text_regal','$caducitat','$aavv','$data_e_out','$newsletter','$pagament','$addr1','$addr2','$cp','$dades','$genere','$check_1','$check_2','$check_3','$check_special','$codi_aplicat','$descompte_aplicat')";
             $result = $mysqli->query($sql);
             if($result)
             {
@@ -4109,7 +4134,7 @@ function AdminSession($mysqli,$sessionstr,$id)
         }
         else
         {
-            $sql="UPDATE reserva SET `ref`='$num_reserva',`user_id`='$user_id',`comentaris`='$comentaris',`quantitat`='$quant_str',`box_id`='$box_id',`total`='$total',`data`='$data',`data_reserva`='$data_r',`data_executada`='$data_e',`quant_total`='$quant_total',`tipus`='$tipus',`session_id`='$session_id',`nom`='$bnom',`descripcio`='$bdesc',`res_nom`='$rnom',`res_mail`='$rmail',`res_tel`='$rtel',`res_mun`='$rmun',`regal`='$regal',`text_regal`='$text_regal',`caducitat`='$caducitat',`aavv`='$aavv',`data_reserva_out`='$data_e_out',`newsletter`='$newsletter',`pagament`='$pagament',`res_adr_1`='$addr1',`res_adr_2`='$addr2',`res_cp`='$cp',`dades`='$dades',`genere`='$genere',`check_1`='$check_1',`check_2`='$check_2',`check_3`='$check_3',`check_special`='$check_special' WHERE id='$id'";
+            $sql="UPDATE reserva SET `ref`='$num_reserva',`user_id`='$user_id',`comentaris`='$comentaris',`quantitat`='$quant_str',`box_id`='$box_id',`total`='$total',`data`='$data',`data_reserva`='$data_r',`data_executada`='$data_e',`quant_total`='$quant_total',`tipus`='$tipus',`session_id`='$session_id',`nom`='$bnom',`descripcio`='$bdesc',`res_nom`='$rnom',`res_mail`='$rmail',`res_tel`='$rtel',`res_mun`='$rmun',`regal`='$regal',`text_regal`='$text_regal',`caducitat`='$caducitat',`aavv`='$aavv',`data_reserva_out`='$data_e_out',`newsletter`='$newsletter',`pagament`='$pagament',`res_adr_1`='$addr1',`res_adr_2`='$addr2',`res_cp`='$cp',`dades`='$dades',`genere`='$genere',`check_1`='$check_1',`check_2`='$check_2',`check_3`='$check_3',`check_special`='$check_special',`codi_aplicat`='$codi_aplicat',`descompte_aplicat`='$descompte_aplicat' WHERE id='$id'";
             $result = $mysqli->query($sql);
             if($result)
             {
@@ -4117,7 +4142,7 @@ function AdminSession($mysqli,$sessionstr,$id)
             }
         }
 
-        error_log($sql);
+        //error_log($sql);
         
         if($state!==null && $ret!==-1)
         {
@@ -5540,8 +5565,7 @@ function AdminSession($mysqli,$sessionstr,$id)
             $email = $info_reserva['rmail'];
         }
         
-        error_log("mail to: ".$email);
-        
+        error_log("mail to: ".$email);        
     
         $subject = "BTiquets - " . translate("Confirmació",$lang);
         $headers  = 'MIME-Version: 1.0' . "\r\n";
@@ -6559,26 +6583,28 @@ function AdminSession($mysqli,$sessionstr,$id)
         return $row;
     }
 
-    function CheckDescompte($id,$codi)
+    function CheckDescompte($id_str,$codi)
     {
         if(file_exists('/php/common.php'))
             include_once '/php/common.php';
         
         global $mysqli;
-        $ret=null;
+        $ret=array();
+        $ret['descompte']=0;
+        $ret['type']=-1;
+
+        $descompte_ids = explode(';',$id_str);
         
-        $sql="SELECT * FROM descomptes WHERE id=$id";
-        $result = $mysqli->query($sql);
-        if ($result) {
-            $row = $result->fetch_row();
-            $ret=array();
-            if(strtolower($row[2])==strtolower($codi)) {
-                $ret['descompte']=$row[4];
-                $ret['type']=$row[3];
-            }
-            else {
-                $ret['descompte']=0;
-                $ret['type']=-1;
+        foreach($descompte_ids as $id){
+            $sql="SELECT * FROM descomptes WHERE id=$id";
+            $result = $mysqli->query($sql);
+            if ($result) {
+                $row = $result->fetch_row();                
+                if(strtolower($row[2])==strtolower($codi)) {
+                    $ret['descompte']=$row[4];
+                    $ret['type']=$row[3];
+                    break;
+                }
             }
         }
         

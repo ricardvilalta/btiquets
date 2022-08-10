@@ -226,7 +226,7 @@
     
     <!--====== ACTIVITATS ======-->
     <?php
-    $productes_relacionats = explode(';',$box['productes_relacionats']);
+    $productes_relacionats = array_filter(explode(';',$box['productes_relacionats']));
     if(sizeof($productes_relacionats)>0) {?>    
     <section id="product-A" class="product-area pt-80 pb-10">
         <div class="container">

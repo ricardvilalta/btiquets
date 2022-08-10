@@ -371,7 +371,7 @@
                         </div>
                         <div class="col-lg-6">
                             <div class="form-group">
-                                <label>Data oberta</label>
+                                <label>Data oberta - Xec regal</label>
                                 <input id="edit_btype_6" class="form-control" value="<?php echo $btype_6; ?>">
                                 <input disabled id="num_btype_6" class="form-control" value="<?php echo $num_btype_6; ?>">
                             </div>

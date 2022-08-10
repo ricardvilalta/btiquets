@@ -533,16 +533,18 @@
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     function sec_session_start($session_name) 
     {
-            $session_name = $session_name; // Set a custom session name
-            $secure = true; // Set to true if using https.
-            $httponly = true; // This stops javascript being able to access the session id. 
+        error_log(session_start()); // Start the php session
+
+            // $session_name = $session_name; // Set a custom session name
+            // $secure = true; // Set to true if using https.
+            // $httponly = true; // This stops javascript being able to access the session id. 
      
-            ini_set('session.use_only_cookies', 1); // Forces sessions to only use cookies. 
-            $cookieParams = session_get_cookie_params(); // Gets current cookies params.
-            session_set_cookie_params($cookieParams["lifetime"], $cookieParams["path"], $cookieParams["domain"], $secure, $httponly); 
-            session_name($session_name); // Sets the session name to the one set above.
-            session_start(); // Start the php session
-            session_regenerate_id(); // regenerated the session, delete the old one.  
+            // ini_set('session.use_only_cookies', 1); // Forces sessions to only use cookies. 
+            // $cookieParams = session_get_cookie_params(); // Gets current cookies params.
+            // session_set_cookie_params($cookieParams["lifetime"], $cookieParams["path"], $cookieParams["domain"], $secure, $httponly); 
+            // session_name($session_name); // Sets the session name to the one set above.
+            // session_start(); // Start the php session
+            // session_regenerate_id(); // regenerated the session, delete the old one.  
     }
 
     function login($name, $password, $mysqli, $login_key_str) 
@@ -1012,7 +1014,7 @@
 
     function login_check($mysqli,$login_key_str) 
     {
-//        error_log("USER ID: " . $_SESSION['user_id'] . "\nUSERNAME: " . $_SESSION['username'] . "\nKEY STR: " . $_SESSION[$login_key_str]);
+       error_log("USER ID: " . $_SESSION['user_id'] . "\nUSERNAME: " . $_SESSION['username'] . "\nKEY STR: " . $_SESSION[$login_key_str]);
         // Check if all session variables are set        
         if(isset($_SESSION['user_id'], $_SESSION['username'], $_SESSION[$login_key_str])) 
         {

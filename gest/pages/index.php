@@ -132,6 +132,11 @@ if(isset($_GET['did2']))
 {
     $did2 = $_GET['did2'];
 }
+if(isset($_GET['totes']))
+{
+    if($_GET['totes']=='true') $ttype=-3;
+    else $ttype=-1;
+}
 
 ?>  
     

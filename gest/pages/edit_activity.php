@@ -6,7 +6,7 @@
 
     if($id>0)
     {   
-        $sql="SELECT name,description,price,event_type,res_days,close_time,sessio_unica,ocult,url,propietari,mail_aux,name_es,description_es,name_en,description_en,price_es,price_en,com_obl,com_aux,collaboradors,recordatori,recordatori_es,recordatori_en,xaccept,xaccept_description,xaccept_description_es,xaccept_description_en,taquilla_tancada,portada_btiquets,productes,enviament_id,pagament,enviament_str,codi_descompte,productes_relacionats FROM box_data WHERE id='$id'";
+        $sql="SELECT name,description,price,event_type,res_days,close_time,sessio_unica,ocult,url,propietari,mail_aux,name_es,description_es,name_en,description_en,price_es,price_en,com_obl,com_aux,collaboradors,recordatori,recordatori_es,recordatori_en,xaccept,xaccept_description,xaccept_description_es,xaccept_description_en,taquilla_tancada,portada_btiquets,productes,enviament_id,pagament,enviament_str,codi_descompte,productes_relacionats,taquilla_arxivada FROM box_data WHERE id='$id'";
         
         $res = $mysqli->query($sql);
         $row = $res->fetch_row();
@@ -46,8 +46,10 @@
         $enviament_id = intval($row[30]);
         $pagament = intval($row[31]);
         $enviament_str = stripslashes($row[32]);
-        $codi_descompte = intval($row[33]);
+        //$codi_descompte = intval($row[33]);
+        $codi_descompte = explode(';',$row[33]);
         $productes_relacionats = explode(';',$row[34]);
+        $taquilla_arxivada = intval($row[35]);
         
         $price_str_original = $price_str;
         $price_es_str_original = $price_es_str;
@@ -81,7 +83,7 @@
         // recullo totes les sessions d'aquesta experiència
         date_default_timezone_set($zone);
         $date = date('Y-m-d');
-        $sql="SELECT id,data,places,estat,antelacio,session_name,tarifes FROM sessions WHERE box_id='$id' AND data > '$date' ORDER BY data DESC";
+        $sql="SELECT id,data,places,estat,antelacio,session_name,tarifes,reserva_unica FROM sessions WHERE box_id='$id' AND data > '$date' ORDER BY data DESC";
         $sessions = array();
         $res = $mysqli->query($sql);
         while($row = $res->fetch_row())
@@ -98,7 +100,7 @@
             
             $inscrits = GetReservationFromSession($mysqli,$row[0]);
             
-            $sessions[] = array('id'=>$row[0],'data'=>$date_session,'places'=>$row[2],'estat'=>intval($row[3]),'antelacio'=>intval($row[4]),'inscrits'=>$inscrits,'session_name'=>addslashes($row[5]),'tarifes'=>$row[6]);
+            $sessions[] = array('id'=>$row[0],'data'=>$date_session,'places'=>$row[2],'estat'=>intval($row[3]),'antelacio'=>intval($row[4]),'inscrits'=>$inscrits,'session_name'=>addslashes($row[5]),'tarifes'=>$row[6],'reserva_unica'=>intval($row[7]));
         }
         
         if($sessio_unica_id!="")
@@ -162,8 +164,10 @@
         $enviament_id = -1;
         $pagament = 1;
         $enviament_str = "";
-        $codi_descompte = -1;
+        //$codi_descompte = -1;
+        $codi_descompte = array();
         $productes_relacionats = array();
+        $taquilla_arxivada = 0;
         
         $sessio_unica = array('id'=>-1,'data'=>"",'places'=>20,'estat'=>-1,'antelacio'=>24,'session_name'=>"");
     }
@@ -418,7 +422,7 @@
         });
         
         $('#cancel').one('click',function(){
-            window.location.href = '/admin/3';
+            window.location.href = '/admin/taquilles';
         });
         
         $('#edit_etype').change(function(){
@@ -552,6 +556,7 @@
         $('#new_multisession').click(function(){
             // Fer les noves sessions
             var datastr = $('#data_type_multi').val();
+            var reservaunica = $("#new_reservaunica_multi").is(':checked')?'checked':'';
             datastr = datastr.replace(/, /g,",");
             multi = datastr.split(',');
             var str = "";
@@ -588,6 +593,10 @@
                                 }?>"
                             + '</select>' +
                         '</div>' +
+                        '<div class="form-group">' + 
+                                '<input class="sess_resunica" type="checkbox" '+ reservaunica +'>' +
+                                '<label> Reserva única per sessió (places màximes per reserva)</label>' +
+                            '</div>' +
                         '<div class="form-group">' +
                             '<label>Etiqueta de la sessió</label>' +
                             '<input class="form-control sess_name" value="' + $('#session_name_multi').val() + '">' +
@@ -637,6 +646,10 @@
                                 echo '<option value=' . $i . '>' . $preu['name'] . ' (' . $preu['price'] . '€)' . '</option>';
                             }?>"
                         + '</select>' +
+                    '</div>' +
+                    '<div class="form-group">' + 
+                        '<input class="sess_resunica" type="checkbox">' +
+                        '<label> Reserva única per sessió (places màximes per reserva)</label>' +
                     '</div>' +
                      '<div class="form-group">' +
                         '<label>Etiqueta de la sessió</label>' +
@@ -798,7 +811,8 @@
                     $sessio_tarifes = explode(":", $sessio['tarifes']);
                     $sessio_tarifes = array_diff($sessio_tarifes, array(""));
                 }
-                ?>
+                $resunica_str = $sessio['reserva_unica']?'checked':'';
+                ?>                
                 var str = 
                 '<div del="0" sid="' + '<?php echo $sessio['id']; ?>' +'" class="session_block">' +
                     '<div class="form-group input-group">' +
@@ -825,6 +839,10 @@
                                 echo '<option value=' . $j . ' '.$auxstr.'>' . $preu['name'] . ' (' . $preu['price'] . '€)' . '</option>';
                             }?>"
                         + '</select>' +
+                    '</div>' +
+                    '<div class="form-group">' + 
+                        '<input class="sess_resunica" type="checkbox" '+ '<?php echo $resunica_str;?>'+'>' +
+                        '<label> Reserva única per sessió (places màximes per reserva)</label>' +
                     '</div>' +
                     '<div class="form-group">' +
                         '<label>Etiqueta de la sessió</label>' +
@@ -1048,6 +1066,8 @@
                         session_str += $(this).find('.sess_name').val();
                         session_str += '%';
                         session_str += tar_str;
+                        session_str += '%';
+                        session_str += $(this).find('.sess_resunica').prop('checked')==true?1:0
                         session_str += ';';
                     }
                 });
@@ -1103,6 +1123,12 @@
                     prel_str+=this.value;
                     prel_str+=';';
                 });
+
+                var cdesc_str = "";
+                $("#codi_descompte :selected").each(function() {
+                    cdesc_str+=this.value;
+                    cdesc_str+=';';
+                });                
                 
                 <?php
                 if($_SESSION['user_id']==$SUPERUSER)
@@ -1158,13 +1184,15 @@
                         xaccept_description_en:$('#edit_xaccept_en').val(),
                         taquilla_tancada:$('#edit_taquilla_tancada').prop('checked')?1:0,
                         portada_btiquets:$('#edit_portada_btiquets').prop('checked')?1:0,
+                        taquilla_arxivada:$('#edit_taquilla_arxivada').prop('checked')?1:0,
                         pagament: pagament_value,
-                        codi_descompte: $('#codi_descompte').val(),
+                        //codi_descompte: $('#codi_descompte').val(),
+                        codi_descompte: cdesc_str,
                         productes_relacionats: prel_str,
                     },
                 }).success(function(ret)
                 {
-                    window.location.href = '/admin/3';
+                    window.location.href = '/admin/taquilles';
                 });
             }
             else
@@ -1208,18 +1236,26 @@
             <div class="panel-body">
                 <div class="row">
                     <div class="col-lg-6">
-                        <div>
+                        <div>                            
                             <div class="form-group">
-                                <label>Actiu</label>
+                                <label>Activa</label>
                                 <input id="edit_actiu" type="checkbox" <?php if($ocult==0) echo 'checked'; ?>>
+                                <p class="help-block">Quan la taquilla no està activa, el seu enllaç no és vàlid, però apareix a l'administrador</p>
+                            </div>
+                            <div class="form-group">
+                                <label>Taquilla arxivada</label>
+                                <input id="edit_taquilla_arxivada" type="checkbox" <?php if($taquilla_arxivada==1) echo 'checked'; ?>>
+                                <p class="help-block">La taquilla no està activa, i només apareix a l'administrador si es selecciona la visualització de taquilles arxivades</p>
                             </div>
                             <div class="form-group">
                                 <label>Taquilla tancada</label>
                                 <input id="edit_taquilla_tancada" type="checkbox" <?php if($taquilla_tancada==1) echo 'checked'; ?>>
-                            </div>
+                                <p class="help-block">La taquilla és activa però no es permet la compra</p>
+                            </div>                            
                             <div class="form-group">
                                 <label>Portada BTiquets</label>
                                 <input id="edit_portada_btiquets" type="checkbox" <?php if($portada_btiquets==1) echo 'checked'; ?>>
+                                <p class="help-block">Es permet que aquesta taquilla es publiqui a la portada de BTiquets</p>
                             </div>
                             <?php
                             if($_SESSION['user_id']==$SUPERUSER)
@@ -1275,7 +1311,7 @@
                                     }
                                     if($disp_6>0 || $event_type==6)
                                     {?>
-                                    <option value="6" <?php if($event_type==6) echo 'selected="selected"'; ?>><?php echo translate("Data oberta", $lang); ?></option>
+                                    <option value="6" <?php if($event_type==6) echo 'selected="selected"'; ?>><?php echo translate("Data oberta - Xec regal", $lang); ?></option>
                                     <?php 
                                     }
                                     if($disp_7>0 || $event_type==7)
@@ -1431,16 +1467,16 @@
                             </div>
                         </div>
                         <div id="payment_mod">
-                            <h2>Codis de descompte</h2>
+                        <h2>Codis de descompte</h2>
                             <div class="form-group">
-                                <select id="codi_descompte" class="form-control">
-                                    <option value="0" <?php if($codi_descompte==-1) echo 'selected="selected"'; ?>>Sense codi de descompte</option>
+                                <select id="codi_descompte" class="form-control" name="codi_descompte" multiple>
                                     <?php
-                                    foreach($descomptes as $descompte)
-                                    {?>
-                                    <option value='<?php echo $descompte[0]; ?>' <?php if($codi_descompte==$descompte[0]) echo 'selected="selected"'; ?>><?php echo $descompte[1]; ?></option>
-                                    <?php 
-                                    }?>
+                                    foreach($descomptes as $descompte){
+                                    ?>
+                                        <option value="<?php echo $descompte[0]; ?>" <?php if (in_array($descompte[0],$codi_descompte)) echo 'selected'; ?>><?php echo $descompte[1]; ?></option>
+                                    <?php
+                                    }
+                                    ?>
                                 </select>
                             </div>
                         </div>
@@ -1459,7 +1495,7 @@
                                     <label><?php echo translate("Antelació", $lang); ?></label>
                                     <input type="number" id="antelacio_type_0" class="form-control" value="<?php echo $sessio_unica['antelacio']; ?>" placeholder="<?php echo translate("Antelació", $lang); ?>">
                                 </div>                                
-                            </div>
+                            </div>                            
                             <div class="form-group">
                                 <label>Etiqueta de la sessió</label>
                                 <input class="form-control" id="name_type_0" value="<?php echo $sessio_unica['session_name']; ?>">
@@ -1489,6 +1525,10 @@
                                     <label><?php echo translate("Antelació", $lang); ?></label>
                                     <input type="number" id="antelacio_type_multi" class="form-control" placeholder="<?php echo translate("Antelació", $lang); ?>">
                                 </div>                                
+                            </div>
+                            <div class="form-group">                                
+                                <input id="new_reservaunica_multi" type="checkbox">
+                                <label>Reserva única per sessió (places màximes per reserva)</label>
                             </div>
                             <div class="form-group">
                                 <label>Etiqueta de la sessió</label>

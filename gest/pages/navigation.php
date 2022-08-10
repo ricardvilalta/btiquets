@@ -144,7 +144,7 @@
                 if(!$compte['extern'])
                 {?>
                 <li>
-                    <a href="/admin/3"><i class="fa fa-ticket fa-fw"></i> Taquilles</a>
+                    <a href="/admin/taquilles"><i class="fa fa-ticket fa-fw"></i> Taquilles</a>
                 </li>
                 <li>
                     <a href="/admin/32"><i class="fa fa-tag fa-fw"></i> Descomptes</a>

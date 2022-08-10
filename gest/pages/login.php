@@ -4,8 +4,8 @@
 
 <?php
 
-    include_once '/php/common.php';
-    include_once '/php/funcions.php';
+    include_once './../../php/common.php';
+    include_once './../../php/funcions.php';
 
     $redirect = "experiencies";
 

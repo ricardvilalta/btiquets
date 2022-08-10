@@ -5,7 +5,8 @@
         $('#action-1').click(function(){
             
             Recalcular(); 
-            if(pre_validation(['name','email','tel' <?php if($box['com_obl']) echo ",'comment'"; ?>],'missing'))
+            bval = pre_validation2('required','missing');
+            if(bval)
             {
                 var ntiquets=0;
                 $('.mod_list').each(function()
@@ -15,6 +16,11 @@
                         ntiquets += parseInt($(this).find('select').val());
                     }                    
                 });
+
+                var val_genere = -1;
+                if ($("#genere").length){
+                    val_genere = $('#genere').val();
+                }
                 
                 if(ntiquets>$('#eventsession input:checked').attr('places'))
                 {
@@ -40,6 +46,7 @@
                                     com: $('#comment').val(),
                                     newsletter: $('#newsletter').is(":checked")?1:0,
                                     lang: '<?php echo $lang; ?>',
+                                    genere: val_genere,
                                     codi_descompte: $('#codi_descompte').val()
                                 }
                             }).done(function(ret)
@@ -131,7 +138,8 @@
     }?>
     
     <a href="#one" class="goto-prev scrolly">Prev</a>
-    <div class="content">
+    <?php include "registre.php";?>
+    <!-- <div class="content">
         <header class="major">
             <h2><?php echo translate("Entra les teves dades", $lang); ?></h2>
         </header>
@@ -172,6 +180,5 @@
                 </div>
             </div>
         </div>
-    </div>
-<!--    <a href="#footer" class="goto-next scrolly">Next</a>-->
+    </div> -->
 </div>
